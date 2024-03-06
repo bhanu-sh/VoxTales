@@ -14,18 +14,6 @@ export default function ResetPage() {
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const verifyToken = async () => {
-    try {
-      const response = await axios.post("/api/users/resetpass", { token });
-      console.log("Verify Success", response.data);
-      setVerified(true);
-      setProcessing(false);
-    } catch (error: any) {
-      console.error(error);
-      setProcessing(false);
-    }
-  }
-
   const onReset = async () => {
     try {
       if (password !== confirmPassword) {
@@ -49,6 +37,17 @@ export default function ResetPage() {
   }, []);
 
   useEffect(() => {
+    const verifyToken = async () => {
+      try {
+        const response = await axios.post("/api/users/resetpass", { token });
+        console.log("Verify Success", response.data);
+        setVerified(true);
+        setProcessing(false);
+      } catch (error: any) {
+        console.error(error);
+        setProcessing(false);
+      }
+    };
     if(token.length > 0) {
         verifyToken();
     }
