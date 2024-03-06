@@ -1,3 +1,4 @@
+//ESLint: 0 errors  0 warnings
 "use client";
 import Link from "next/link";
 import React, { useEffect } from "react";
