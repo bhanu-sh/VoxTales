@@ -16,15 +16,12 @@ export default function ResetPage() {
 
   const verifyToken = async () => {
     try {
-
       const response = await axios.post("/api/users/resetpass", { token });
       console.log("Verify Success", response.data);
       setVerified(true);
-      toast.success("Token Verified");
       setProcessing(false);
     } catch (error: any) {
       console.error(error);
-      toast.error(error.message);
       setProcessing(false);
     }
   }
@@ -42,7 +39,6 @@ export default function ResetPage() {
       router.push("/login");
     } catch (error: any) {
       console.error(error);
-      toast.error(error.message);
     }
   }
   
