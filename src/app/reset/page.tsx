@@ -97,7 +97,7 @@ export default function ResetPage() {
     ) : (
       <div className="flex flex-col items-center justify-center min-h-screen py-2">
         <h1 className="text-4xl">
-          {processing ? (<div className="loader"></div>) : "Invalid or expired token"}
+          {processing ? (<div className="loader"></div>) : "Invalid or expired reset link"}
         </h1>
       </div>
     )}
