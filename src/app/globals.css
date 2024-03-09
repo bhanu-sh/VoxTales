@@ -18,7 +18,7 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: url("/bg.jpg") no-repeat center center fixed !important;
+  background: linear-gradient(180deg, rgba(var(--background-start-rgb), 1) 0%, rgba(var(--background-end-rgb), 1) 100%);
 }
 
 @layer utilities {

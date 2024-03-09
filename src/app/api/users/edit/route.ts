@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Assuming the request body contains updated user profile data
-        const { avatar, username, name, description, email, newPassword } = await request.json();
+        const { avatar, username, name, bio, email, newPassword } = await request.json();
 
         // Update user profile fields
         if (name) {
@@ -38,9 +38,9 @@ export async function POST(request: NextRequest) {
             user.avatar = avatar;
         }
 
-        if (description) {
-            user.description = description;
-        }
+
+            user.bio = bio;
+
 
         if (newPassword) {
             // Hash the new password before saving
@@ -48,6 +48,11 @@ export async function POST(request: NextRequest) {
             const hashedPassword = await bcrypt.hash(newPassword, salt);
             user.password = hashedPassword;
         }
+
+        //create a new prop if not in model
+        // user.newProp = "new value";
+
+
 
         // Save the updated user profile
         await user.save();

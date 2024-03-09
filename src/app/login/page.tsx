@@ -61,11 +61,17 @@ export default function LoginPage() {
         onChange={(e) => setUser({ ...user, password: e.target.value })}
       />
       <button
-        className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600"
+        className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 disabled:opacity-50"
         onClick={onLogin}
+        disabled={buttonDisabled || loading}
       >
         Login
       </button>
+      <p>
+        <Link href="/forgot" className="text-blue-400">
+          Forgot password
+        </Link>
+      </p>
       <p>
         Don&apos;t have an account? &nbsp;
         <Link href="/signup" className="text-blue-400">
