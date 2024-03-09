@@ -18,12 +18,7 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background: url("/bg.jpg") no-repeat center center fixed !important;
 }
 
 @layer utilities {
@@ -44,4 +39,14 @@ body {
 }
 @keyframes l25 {
   100% {transform: rotate(1turn)}
+}
+
+.avatarSize {
+  width: 1080px;
+  height: 1080px;
+}
+
+.test{
+  background-color: #00000059;
+
 }

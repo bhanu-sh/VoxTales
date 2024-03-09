@@ -11,7 +11,7 @@ connect()
 export async function POST(request: NextRequest) {
     try {
         const reqBody = await request.json()
-        const {username, email, password} = reqBody
+        const {username, email, password, name} = reqBody
 
         console.log(reqBody);
 
@@ -30,6 +30,7 @@ export async function POST(request: NextRequest) {
         const newUser = new User({
             username,
             email,
+            name,
             password: hashedPassword
         })
 

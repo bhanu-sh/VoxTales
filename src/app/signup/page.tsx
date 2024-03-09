@@ -9,9 +9,10 @@ import toast from "react-hot-toast";
 export default function SignupPage() {
   const router = useRouter();
   const [user, setUser] = React.useState({
+    username: "",
+    name: "",
     email: "",
     password: "",
-    username: "",
   });
   const [buttonDisabled, setButtonDisabled] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
@@ -55,6 +56,15 @@ export default function SignupPage() {
         value={user.username}
         placeholder="username"
         onChange={(e) => setUser({ ...user, username: e.target.value })}
+      />
+      <label htmlFor="name">Name</label>
+      <input
+        className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 text-black"
+        id="name"
+        type="text"
+        value={user.name}
+        placeholder="name"
+        onChange={(e) => setUser({ ...user, name: e.target.value })}
       />
       <label htmlFor="email">email</label>
       <input

@@ -4,10 +4,19 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import React, { use, useEffect, useState } from "react";
+import Image from "next/image";
+
+interface User {
+  username: string;
+  avatar: string;
+  name: string;
+  email: string;
+  description: string;
+}
 
 export default function ProfilePage() {
   const router = useRouter();
-  const [data, setData] = useState("nothing");
+  const [data, setData] = useState<User | null>(null);
   const logout = async () => {
     try {
       await axios.get("/api/users/logout");
@@ -17,37 +26,69 @@ export default function ProfilePage() {
       console.error("Error logging out", error.message);
       toast.error(error.message);
     }
-  }
+  };
 
   const getUserDetails = async () => {
-    const res = await axios.get("/api/users/me")
-    console.log(res.data);
-    setData(res.data.data._id);
-  }
+    try {
+      const res = await axios.get("/api/users/me");
+      console.log(res.data);
+      setData(res.data.data);
+    } catch (error: any) {
+      console.error("Error getting user details", error.message);
+      toast.error("Error getting user details");
+    }
+  };
 
   useEffect(() => {
     getUserDetails();
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <h1>Profile</h1>
-      <hr />
-      <p>Profile page</p>
-      <h2 className="p-1 rounded bg-green-500">{data === 'nothing' ? "Nothing" : <Link href={`/profile/${data}`}>{data}</Link>}</h2>
-      <hr />
-      <button
-        onClick={logout}
-        className="bg-blue-500 mt-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline"
-      >
-        Logout
-      </button>
-      <button
-        onClick={getUserDetails}
-        className="bg-green-800 mt-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline"
-      >
-        Get User Details
-      </button>
-    </div>
+    <>
+      {data ? (
+        <div className="max-w-4xl flex h-auto flex-wrap mx-auto lg:my-0 justify-between mt-5">
+          {/*Main Col*/}
+          <div
+            id="profile"
+            className="w-full lg:w-3/5 rounded-lg lg:rounded-l-lg lg:rounded-r-none shadow-2xl lg:mx-auto mt-12 test flex justify-between p-6"
+          >
+            <div className="text-center lg:text-left">
+              {/* Image for mobile view*/}
+              <div
+                className="block lg:hidden rounded-full shadow-xl mx-auto -mt-16 h-48 w-48 bg-cover bg-center"
+                style={{
+                  backgroundImage: `url(${data.avatar})`,
+                }}
+              />
+              <h1 className="text-3xl font-bold pt-8 lg:pt-0">{data.username}</h1>
+              <p className="pt-8 text-sm">
+                {data.description}
+              </p>
+              <div className="pt-12 pb-8">
+                <Link href="/profile/edit">
+                  <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full w-32">
+                    Edit Profile
+                  </button>
+                </Link>
+                <button
+                  onClick={logout}
+                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full ml-4 w-32"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+            <div className="flex items-center">
+              {/* Big profile image for side bar (desktop) */}
+              <img
+                src={data.avatar}
+                className="shadow-2xl hidden lg:block rounded-full w-48"
+              />
+            </div>
+          </div>
+          {/*Img Col*/}
+        </div>
+      ) : null}
+    </>
   );
 }
