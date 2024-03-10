@@ -38,9 +38,9 @@ export async function POST(request: NextRequest) {
             user.avatar = avatar;
         }
 
-
+        if (bio) {
             user.bio = bio;
-
+        }
 
         if (newPassword) {
             // Hash the new password before saving
