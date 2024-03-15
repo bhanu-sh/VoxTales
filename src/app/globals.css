@@ -21,12 +21,11 @@ body {
   background: linear-gradient(180deg, rgba(var(--background-start-rgb), 1) 0%, rgba(var(--background-end-rgb), 1) 100%);
 }
 
-@layer utilities {
+ @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
-}
-
+} 
 .loader {
   width: 50px;
   aspect-ratio: 1;
@@ -49,4 +48,46 @@ body {
 .test{
   background-color: #00000059;
 
+}
+
+:root{
+  --bg: #000000;
+  --bgSoft: #313131;
+  --text: white;
+  --textSoft: #e5e5e5;
+  --btn: #3673fd;
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body{
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
+}
+
+a{
+  text-decoration: none !important;
+  color: inherit  !important;
+}
+
+.logo1{
+  color: white;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;    
+  font-size: 96px;
+}
+
+.logo2{
+  color: red;
+}
+
+.tagline{
+  color: white;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 72px;
+  font-weight: 300;
+  margin-top: 10px;
 }

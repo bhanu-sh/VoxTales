@@ -19,9 +19,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Toaster position="bottom-center" />
-        <Navbar />
-        {children}
+        <div className="container mx-auto">
+          <Toaster position="bottom-center" />
+          <Navbar />
+          {children}
+        </div>
       </body>
     </html>
   );
