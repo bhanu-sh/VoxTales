@@ -5,6 +5,7 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useAuth } from "@/contexts/authContext";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function LoginPage() {
   });
   const [buttonDisabled, setButtonDisabled] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const { setLoggedin } = useAuth();
 
   const onLogin = async () => {
     try {
@@ -21,6 +23,7 @@ export default function LoginPage() {
       const response = await axios.post("/api/users/login", user);
       console.log(response.data);
       toast.success("Login successful!");
+      setLoggedin(true);
       router.push("/profile");
     } catch (error: any) {
       console.error("Error logging in", error.message);

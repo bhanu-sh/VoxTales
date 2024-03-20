@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { useAuth } from "@/contexts/authContext";
 
 const links = [
   {
@@ -25,37 +26,8 @@ const links = [
 
 const Links = () => {
   const router = useRouter();
-  const [avatar, setAvatar] = useState("https://www.gravatar.com/avatar/?d=mp");
-  const [session, setSession] = useState(false);
+  const { avatar, user, loggedin, logout } = useAuth();
   const [open, setOpen] = useState(false);
-
-  const logout = async () => {
-    try {
-      await axios.get("/api/users/logout");
-      toast.success("Logout successful!");
-      setSession(false);
-      router.push("/login");
-    } catch (error: any) {
-      console.error("Error logging out", error.message);
-      toast.error(error.message);
-    }
-  }
-
-  const getAvatar = async () => {
-    try {
-      const res = await axios.get("/api/users/me")
-      console.log(res.data);
-      setAvatar(res.data.data.avatar);
-      setSession(true);
-    } catch (error: any) {
-      console.error("Error getting user details", error.message);
-      // toast.error("Error getting user details");
-    }
-  }
-
-  useEffect(() => {
-    getAvatar();
-  } , []);
 
   return (
     <div className={styles.container}>
@@ -63,8 +35,13 @@ const Links = () => {
         {links.map((link) => (
           <NavLink item={link} key={link.title} />
         ))}
-        {session ? (
+        {loggedin ? (
           <>
+            <img
+              src={avatar}
+              alt="user avatar"
+              className="rounded-full h-12 w-12"
+            />
             {/* {isAdmin && <NavLink item={{ title: "Admin", path: "/admin" }} />} */}
             <button className={styles.logout} onClick={logout}>Logout</button>
           </>
