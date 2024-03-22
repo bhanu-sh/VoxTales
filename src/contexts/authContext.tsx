@@ -5,16 +5,6 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  avatar: string;
-  role: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 const AuthContext = createContext<{
   loggedin: boolean;
   avatar: string;
@@ -46,7 +36,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       console.error("Error getting user details");
     }
   };
-  
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       // Execute only in the browser environment
