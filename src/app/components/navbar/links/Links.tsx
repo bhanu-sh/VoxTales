@@ -29,8 +29,17 @@ const Links = () => {
   const router = useRouter();
   const { loggedin, logout } = useAuth();
   const [open, setOpen] = useState(false);
-  const userItem = localStorage.getItem("user");
-  const avatarSrc = userItem ? JSON.parse(userItem).avatar : null;
+  const [avatarSrc, setAvatarSrc] = useState("");
+
+  useEffect(() => {
+    // Check if localStorage is available (i.e., if running on the client side)
+    if (typeof window !== 'undefined') {
+      const userItem = localStorage.getItem("user");
+      if (userItem) {
+        setAvatarSrc(JSON.parse(userItem).avatar);
+      }
+    }
+  }, []);
 
   return (
     <div className={styles.container}>
