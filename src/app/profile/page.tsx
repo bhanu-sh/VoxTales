@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import React, { use, useEffect, useState } from "react";
 import Image from "next/image";
+import { useAuth } from "@/contexts/authContext";
 
 interface User {
   username: string;
@@ -17,16 +18,7 @@ interface User {
 export default function ProfilePage() {
   const router = useRouter();
   const [data, setData] = useState<User | null>(null);
-  const logout = async () => {
-    try {
-      await axios.get("/api/users/logout");
-      toast.success("Logout successful!");
-      router.push("/login");
-    } catch (error: any) {
-      console.error("Error logging out", error.message);
-      toast.error(error.message);
-    }
-  };
+  const { logout } = useAuth();
 
   const getUserDetails = async () => {
     try {

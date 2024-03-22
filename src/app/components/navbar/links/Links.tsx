@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useAuth } from "@/contexts/authContext";
+import Link from "next/link";
 
 const links = [
   {
@@ -26,7 +27,7 @@ const links = [
 
 const Links = () => {
   const router = useRouter();
-  const { avatar, user, loggedin, logout } = useAuth();
+  const { loggedin, logout } = useAuth();
   const [open, setOpen] = useState(false);
 
   return (
@@ -37,13 +38,20 @@ const Links = () => {
         ))}
         {loggedin ? (
           <>
-            <img
-              src={avatar}
-              alt="user avatar"
-              className="rounded-full h-12 w-12"
-            />
+            <Link href="/profile">
+              <img
+                src={
+                  localStorage.getItem("user") &&
+                  JSON.parse(localStorage.getItem("user")).avatar
+                }
+                alt="user avatar"
+                className="rounded-full h-12 w-12 hover:border-2 hover:border-red-500 cursor-pointer"
+              />
+            </Link>
             {/* {isAdmin && <NavLink item={{ title: "Admin", path: "/admin" }} />} */}
-            <button className={styles.logout} onClick={logout}>Logout</button>
+            <button className={styles.logout} onClick={logout}>
+              Logout
+            </button>
           </>
         ) : (
           <NavLink item={{ title: "Login", path: "/login" }} />

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useAuth } from "@/contexts/authContext";
+import { getDataFromToken } from './../../helpers/getDataFromToken';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -23,6 +24,8 @@ export default function LoginPage() {
       const response = await axios.post("/api/users/login", user);
       console.log(response.data);
       toast.success("Login successful!");
+      const userData = await axios.get("/api/users/me");
+      localStorage.setItem("user", JSON.stringify(userData.data.data));
       setLoggedin(true);
       router.push("/profile");
     } catch (error: any) {
