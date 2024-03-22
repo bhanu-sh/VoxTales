@@ -29,6 +29,8 @@ const Links = () => {
   const router = useRouter();
   const { loggedin, logout } = useAuth();
   const [open, setOpen] = useState(false);
+  const userItem = localStorage.getItem("user");
+  const avatarSrc = userItem ? JSON.parse(userItem).avatar : null;
 
   return (
     <div className={styles.container}>
@@ -40,10 +42,7 @@ const Links = () => {
           <>
             <Link href="/profile">
               <img
-                src={
-                  localStorage.getItem("user") &&
-                  JSON.parse(localStorage.getItem("user")).avatar
-                }
+                src={avatarSrc}
                 alt="user avatar"
                 className="rounded-full h-12 w-12 hover:border-2 hover:border-red-500 cursor-pointer"
               />
