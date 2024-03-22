@@ -21,17 +21,44 @@ export default function EditProfile() {
     name: "",
     bio: "",
     email: "",
+    oldPassword: "",
     newPassword: "",
   });
   const [data, setData] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [publicProfile, setPublicProfile] = useState(true);
   const [account, setAccount] = useState(false);
   const [notifications, setNotifications] = useState(false);
   const [pro, setPro] = useState(false);
-  
-  const active = "flex items-center px-3 py-2.5 font-bold bg-white  text-indigo-900 border rounded-full";
+  const [fullNamefield, setFullNameField] = useState(false);
+  const [usernameField, setUsernameField] = useState(false);
+  const [bioField, setBioField] = useState(false);
+  const [emailField, setEmailField] = useState(false);
+  const [passwordField, setPasswordField] = useState(false);
+  const [confirmPasswordFlag, setConfirmPasswordFlag] = useState(false);
+
+  const active =
+    "flex items-center px-3 py-2.5 font-bold bg-white  text-indigo-900 border rounded-full";
+
+  const getUserDetails = async () => {
+    try {
+      const res = await axios.get("/api/users/me");
+      console.log(res.data);
+      setData(res.data.data);
+      setUser({
+        avatar: res.data.data.avatar,
+        username: res.data.data.username,
+        name: res.data.data.name,
+        bio: res.data.data.bio,
+        email: res.data.data.email,
+        oldPassword: "",
+        newPassword: "",
+      });
+    } catch (error: any) {
+      console.error("Error getting user details", error.message);
+      toast.error("Error getting user details");
+    }
+  };
 
   const onEdit = async () => {
     try {
@@ -45,17 +72,6 @@ export default function EditProfile() {
       toast.error(error.message);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const getUserDetails = async () => {
-    try {
-      const res = await axios.get("/api/users/me");
-      console.log(res.data);
-      setData(res.data.data);
-    } catch (error: any) {
-      console.error("Error getting user details", error.message);
-      toast.error("Error getting user details");
     }
   };
 
@@ -77,39 +93,57 @@ export default function EditProfile() {
                   setNotifications(false);
                   setPro(false);
                 }}
-                className={publicProfile ? active : "flex items-center px-3 py-2.5 font-semibold hover:text-white hover:border hover:rounded-full"}
+                className={
+                  publicProfile
+                    ? active
+                    : "flex items-center px-3 py-2.5 font-semibold hover:text-white hover:border hover:rounded-full"
+                }
               >
                 Public Profile
               </button>
               <button
-              onClick={() => {
-                setPublicProfile(false);
-                setAccount(true);
-                setNotifications(false);
-                setPro(false);
-              }
-              }
-              className={account ? active : "flex items-center px-3 py-2.5 font-semibold hover:text-white hover:border hover:rounded-full"}>
+                onClick={() => {
+                  setPublicProfile(false);
+                  setAccount(true);
+                  setNotifications(false);
+                  setPro(false);
+                }}
+                className={
+                  account
+                    ? active
+                    : "flex items-center px-3 py-2.5 font-semibold hover:text-white hover:border hover:rounded-full"
+                }
+              >
                 Account Settings
               </button>
-              <button 
-              onClick={() => {
-                setPublicProfile(false);
-                setAccount(false);
-                setNotifications(true);
-                setPro(false);
-              }}
-              className={notifications ? active : "flex items-center px-3 py-2.5 font-semibold hover:text-white hover:border hover:rounded-full"}>
+              <button
+                onClick={() => {
+                  setPublicProfile(false);
+                  setAccount(false);
+                  setNotifications(true);
+                  setPro(false);
+                }}
+                className={
+                  notifications
+                    ? active
+                    : "flex items-center px-3 py-2.5 font-semibold hover:text-white hover:border hover:rounded-full"
+                }
+              >
                 Notifications
               </button>
-              <button 
-              onClick={() => {
-                setPublicProfile(false);
-                setAccount(false);
-                setNotifications(false);
-                setPro(true);
-              }}
-              className={pro ? active : "flex items-center px-3 py-2.5 font-semibold hover:text-white hover:border hover:rounded-full"}>
+              <button
+                onClick={() => {
+                  setPublicProfile(false);
+                  setAccount(false);
+                  setNotifications(false);
+                  setPro(true);
+                }}
+                className={
+                  pro
+                    ? active
+                    : "flex items-center px-3 py-2.5 font-semibold hover:text-white hover:border hover:rounded-full"
+                }
+              >
                 PRO Account
               </button>
             </div>
@@ -143,7 +177,7 @@ export default function EditProfile() {
                         </button>
                       </div>
                     </div>
-                    <div className="items-center mt-8 sm:mt-14 text-[#202142]">
+                    <div className="items-center mt-8 sm:mt-14 text-blue-300">
                       <div className="flex flex-col items-center w-full mb-2 space-x-0 space-y-2 sm:flex-row sm:space-x-4 sm:space-y-0 sm:mb-6">
                         <div className="w-full">
                           <label
@@ -151,17 +185,36 @@ export default function EditProfile() {
                             className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
                           >
                             Your full name
+                            <button
+                              className="text-indigo-700 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-500 focus:outline-none"
+                              onClick={() => setFullNameField(!fullNamefield)}
+                            >
+                              &nbsp; {fullNamefield ? "Cancel" : "Edit"}
+                            </button>
                           </label>
-                          <input
-                            type="text"
-                            id="full_name"
-                            className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                            placeholder="Your full name"
-                            defaultValue={data.name}
-                            onChange={(e) =>
-                              setUser({ ...user, name: e.target.value })
-                            }
-                          />
+                          <p>{user.name}</p>
+                          {fullNamefield ? (
+                            <>
+                              <input
+                                type="text"
+                                id="full_name"
+                                className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                                placeholder="Your full name"
+                                onChange={(e) =>
+                                  setUser({ ...user, name: e.target.value })
+                                }
+                              />
+                              <div className="flex justify-end">
+                                <button
+                                  onClick={onEdit}
+                                  type="submit"
+                                  className="text-white bg-indigo-700  hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
+                                >
+                                  Save
+                                </button>
+                              </div>
+                            </>
+                          ) : null}
                         </div>
                       </div>
                       <div className="mb-2 sm:mb-6">
@@ -170,17 +223,36 @@ export default function EditProfile() {
                           className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
                         >
                           Your username
+                          <button
+                            className="text-indigo-700 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-500 focus:outline-none"
+                            onClick={() => setUsernameField(!usernameField)}
+                          >
+                            &nbsp; {usernameField ? "Cancel" : "Edit"}
+                          </button>
                         </label>
-                        <input
-                          type="email"
-                          id="email"
-                          className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                          placeholder="Your username"
-                          defaultValue={data.username}
-                          onChange={(e) =>
-                            setUser({ ...user, username: e.target.value })
-                          }
-                        />
+                        <p>{user.username}</p>
+                        {usernameField ? (
+                          <>
+                            <input
+                              type="text"
+                              id="username"
+                              className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                              placeholder="Your username"
+                              onChange={(e) =>
+                                setUser({ ...user, username: e.target.value })
+                              }
+                            />
+                            <div className="flex justify-end">
+                              <button
+                                onClick={onEdit}
+                                type="submit"
+                                className="text-white bg-indigo-700  hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
+                              >
+                                Save
+                              </button>
+                            </div>
+                          </>
+                        ) : null}
                       </div>
                       <div className="mb-6">
                         <label
@@ -188,26 +260,35 @@ export default function EditProfile() {
                           className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
                         >
                           Bio
+                          <button
+                            className="text-indigo-700 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-500 focus:outline-none"
+                            onClick={() => setBioField(!bioField)}
+                          >
+                            &nbsp;{bioField ? "Cancel" : "Edit"}
+                          </button>
                         </label>
-                        <textarea
-                          id="message"
-                          rows={4}
-                          className="block p-2.5 w-full text-sm text-indigo-900 bg-indigo-50 rounded-lg border border-indigo-300 focus:ring-indigo-500 focus:border-indigo-500 "
-                          placeholder="Write your bio here..."
-                          defaultValue={data.bio}
-                          onChange={(e) =>
-                            setUser({ ...user, bio: e.target.value })
-                          }
-                        />
-                      </div>
-                      <div className="flex justify-end">
-                        <button
-                          onClick={onEdit}
-                          type="submit"
-                          className="text-white bg-indigo-700  hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
-                        >
-                          Save
-                        </button>
+                        <p>{user.bio}</p>
+                        {bioField ? (
+                          <>
+                            <textarea
+                              id="bio"
+                              className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                              placeholder="Your bio"
+                              onChange={(e) =>
+                                setUser({ ...user, bio: e.target.value })
+                              }
+                            />
+                            <div className="flex justify-end">
+                              <button
+                                onClick={onEdit}
+                                type="submit"
+                                className="text-white bg-indigo-700  hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
+                              >
+                                Save
+                              </button>
+                            </div>
+                          </>
+                        ) : null}
                       </div>
                     </div>
                   </div>
@@ -218,43 +299,88 @@ export default function EditProfile() {
                   <h2 className="pl-6 text-2xl font-bold sm:text-xl">
                     Account Settings
                   </h2>
-                  <div className="grid max-w-2xl mx-auto mt-8">
-                    <main className="items-center mt-8 sm:mt-14 text-[#202142]">
-                      <div className="mb-2 sm:mb-6">
+                  <div className="grid max-w-2xl mx-auto mt-8 ">
+                    <main className="items-center mt-8 sm:mt-14 text-blue-300">
+                      <div className="mb-2 sm:mb-6 ">
                         <label
                           htmlFor="email"
                           className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
                         >
                           Your email
+                          <button
+                            className="text-indigo-700 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-500 focus:outline-none"
+                            onClick={() => setEmailField(!emailField)}
+                          >
+                            &nbsp; {emailField ? "Cancel" : "Edit"}
+                          </button>
                         </label>
-                        <input
-                          type="email"
-                          id="email"
-                          className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                          placeholder="Enter Email"
-                          defaultValue={data.email}
-                          onChange={(e) =>
-                            setUser({ ...user, email: e.target.value })
-                          }
-                        />
+                        <p>{user.email}</p>
+                        {emailField ? (
+                          <input
+                            type="email"
+                            id="email"
+                            className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                            placeholder="Your email"
+                            onChange={(e) =>
+                              setUser({ ...user, email: e.target.value })
+                            }
+                          />
+                        ) : null}
                       </div>
                       <div className="mb-2 sm:mb-6">
                         <label
                           htmlFor="password"
                           className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
                         >
-                          Password
+                          <button
+                            className="text-red-700 dark:text-red-400 hover:text-red-900 dark:hover:text-red-500 focus:outline-none"
+                            onClick={() => setPasswordField(!passwordField)}
+                          >
+                            {passwordField ? "Cancel" : "Change password"}
+                          </button>
                         </label>
-                        <input
-                          type="password"
-                          id="password"
-                          className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                          placeholder="Enter Password"
-                          defaultValue={data.newPassword}
-                          onChange={(e) =>
-                            setUser({ ...user, newPassword: e.target.value })
-                          }
-                        />
+                        <p>{user.oldPassword}</p>
+                        {passwordField ? (
+                          <>
+                            <input
+                              type="password"
+                              id="old_password"
+                              className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                              placeholder="Old password"
+                              onChange={(e) =>
+                                setUser({
+                                  ...user,
+                                  oldPassword: e.target.value,
+                                })
+                              }
+                            />
+                            <input
+                              type="password"
+                              id="new_password"
+                              className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                              placeholder="New password"
+                              onChange={(e) =>
+                                setUser({
+                                  ...user,
+                                  newPassword: e.target.value,
+                                })
+                              }
+                            />
+                            <input
+                              type="password"
+                              id="confirm_password"
+                              className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                              placeholder="Confirm password"
+                              onChange={(e) => {
+                                if (e.target.value === user.newPassword) {
+                                  setConfirmPasswordFlag(false);
+                                } else {
+                                  setConfirmPasswordFlag(true);
+                                }
+                              }}
+                            />
+                          </>
+                        ) : null}
                       </div>
                       <div className="flex justify-end">
                         <button
@@ -274,20 +400,17 @@ export default function EditProfile() {
                 <div className="w-full px-6 pb-8 mt-8 sm:max-w-xl sm:rounded-lg">
                   <h2 className="pl-6 text-2xl font-bold sm:text-xl">
                     Notifications
-                    </h2>
+                  </h2>
                 </div>
-                ) : null}
+              ) : null}
 
               {pro ? (
                 <div className="w-full px-6 pb-8 mt-8 sm:max-w-xl sm:rounded-lg">
                   <h2 className="pl-6 text-2xl font-bold sm:text-xl">
                     COMING SOON..
-                    </h2>
+                  </h2>
                 </div>
-                ) : null}
-                
-                
-
+              ) : null}
             </div>
           </main>
         </div>

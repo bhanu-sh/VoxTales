@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Assuming the request body contains updated user profile data
-        const { avatar, username, name, bio, email, newPassword } = await request.json();
+        const { avatar, username, name, bio, email, oldPassword, newPassword } = await request.json();
 
         // Update user profile fields
         if (name) {
@@ -42,11 +42,18 @@ export async function POST(request: NextRequest) {
             user.bio = bio;
         }
 
-        if (newPassword) {
-            // Hash the new password before saving
+        if (oldPassword && newPassword) {
+            const isMatch = await bcrypt.compare(oldPassword, user.password);
+
+            if (!isMatch) {
+                return NextResponse.json(
+                    { error: "Invalid old password" },
+                    { status: 400 }
+                );
+            }
+
             const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(newPassword, salt);
-            user.password = hashedPassword;
+            user.password = await bcrypt.hash(newPassword, salt);
         }
 
         //create a new prop if not in model
