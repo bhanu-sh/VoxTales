@@ -6,13 +6,13 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
 interface User {
-    id: string;
-    name: string;
-    email: string;
-    avatar: string;
-    role: string;
-    createdAt: string;
-    updatedAt: string;
+  id: string;
+  name: string;
+  email: string;
+  avatar: string;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 const AuthContext = createContext<{
@@ -32,11 +32,7 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [loggedin, setLoggedin] = useState(
-    localStorage.getItem("user") && localStorage.getItem("user") !== null
-      ? true
-      : false
-  );
+  const [loggedin, setLoggedin] = useState(false);
   const [avatar, setAvatar] = useState("");
   const router = useRouter();
 
@@ -50,7 +46,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       console.error("Error getting user details");
     }
   };
+  
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      // Execute only in the browser environment
+      const user = localStorage.getItem("user");
+      if (user && user !== null) {
+        setLoggedin(true);
+      }
+    }
     fetchData();
   }, []);
 
@@ -67,9 +71,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   return (
-    <AuthContext.Provider
-      value={{ avatar, loggedin, setLoggedin, logout }}
-    >
+    <AuthContext.Provider value={{ avatar, loggedin, setLoggedin, logout }}>
       {children}
     </AuthContext.Provider>
   );
