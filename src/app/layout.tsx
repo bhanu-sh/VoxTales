@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import Navbar from "./components/navbar/Navbar";
 import { AuthProvider } from "@/contexts/authContext";
+import { EdgeStoreProvider } from "@/lib/edgestore";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,7 +25,7 @@ export default function RootLayout({
           <Toaster position="bottom-center" />
           <AuthProvider>
             <Navbar />
-            {children}
+            <EdgeStoreProvider>{children}</EdgeStoreProvider>
           </AuthProvider>
         </div>
       </body>
