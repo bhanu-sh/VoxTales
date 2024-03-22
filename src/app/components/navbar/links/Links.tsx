@@ -76,14 +76,12 @@ const Links = () => {
         />
       ) : (
         <Image
-          src="/icons/NavOpen.png"
+          src="/icons/navOpen.png"
           width={40}
           height={40}
           alt="menu button"
           className={styles.menuButton}
           onClick={() => setOpen((prev) => !prev)}
-          onError={(e) => {console.log(e);} }
-          unoptimized={true}
         />
       )}
       {/* <Image src="/icons/mobileNav.png" width={40} height={40} className={styles.menuButton} onClick={() => setOpen((prev) => !prev)}></Image> */}
