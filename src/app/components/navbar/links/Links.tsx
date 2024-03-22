@@ -39,7 +39,7 @@ const Links = () => {
         setAvatarSrc(JSON.parse(userItem).avatar);
       }
     }
-  }, []);
+  }, [loggedin]);
 
   return (
     <div className={styles.container}>
@@ -82,6 +82,8 @@ const Links = () => {
           alt="menu button"
           className={styles.menuButton}
           onClick={() => setOpen((prev) => !prev)}
+          onError={(e) => {console.log(e);} }
+          unoptimized={true}
         />
       )}
       {/* <Image src="/icons/mobileNav.png" width={40} height={40} className={styles.menuButton} onClick={() => setOpen((prev) => !prev)}></Image> */}
