@@ -3,6 +3,13 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
+import {
+  Button,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
+} from "@material-tailwind/react";
 
 interface User {
   avatar: string;
@@ -36,12 +43,16 @@ export default function EditProfile() {
   const [emailField, setEmailField] = useState(false);
   const [passwordField, setPasswordField] = useState(false);
   const [confirmPasswordFlag, setConfirmPasswordFlag] = useState(false);
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpen = () => setOpen(!open);
 
   const active =
     "flex items-center px-3 py-2.5 font-bold bg-white  text-indigo-900 border rounded-full";
 
   const getUserDetails = async () => {
     try {
+      setLoading(true);
       const res = await axios.get("/api/users/me");
       console.log(res.data);
       setData(res.data.data);
@@ -57,6 +68,8 @@ export default function EditProfile() {
     } catch (error: any) {
       console.error("Error getting user details", error.message);
       toast.error("Error getting user details");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -163,18 +176,44 @@ export default function EditProfile() {
                         alt="Bordered avatar"
                       />
                       <div className="flex flex-col space-y-5 sm:ml-8">
-                        <button
-                          type="button"
-                          className="py-3.5 px-7 text-base font-medium focus:outline-none rounded-lg border border-indigo-200 focus:z-10 focus:ring-4 focus:ring-indigo-200 bg-blue-500 hover:bg-blue-600 text-white"
+                        <Button onClick={handleOpen} variant="gradient">
+                          Open Dialog
+                        </Button>
+                        <Dialog
+                          className="dark"
+                          open={open}
+                          handler={handleOpen}
+                          animate={{
+                            mount: { scale: 1, y: 0 },
+                            unmount: { scale: 0.9, y: -100 },
+                          }}
                         >
-                          Change picture
-                        </button>
-                        <button
-                          type="button"
-                          className="py-3.5 px-7 text-base font-medium text-indigo-900 focus:outline-none bg-white rounded-lg border border-indigo-200 hover:bg-indigo-100 hover:text-[#202142] focus:z-10 focus:ring-4 focus:ring-indigo-200 "
-                        >
-                          Delete picture
-                        </button>
+                          <DialogHeader>Its a simple dialog.</DialogHeader>
+                          <DialogBody>
+                            The key to more success is to have a lot of pillows.
+                            Put it this way, it took me twenty five years to get
+                            these plants, twenty five years of blood sweat and
+                            tears, and I&apos;m never giving up, I&apos;m just
+                            getting started. I&apos;m up to something. Fan luv.
+                          </DialogBody>
+                          <DialogFooter>
+                            <Button
+                              variant="text"
+                              color="red"
+                              onClick={handleOpen}
+                              className="mr-1"
+                            >
+                              <span>Cancel</span>
+                            </Button>
+                            <Button
+                              variant="gradient"
+                              color="green"
+                              onClick={handleOpen}
+                            >
+                              <span>Confirm</span>
+                            </Button>
+                          </DialogFooter>
+                        </Dialog>
                       </div>
                     </div>
                     <div className="items-center mt-8 sm:mt-14 text-blue-300">
@@ -414,7 +453,11 @@ export default function EditProfile() {
             </div>
           </main>
         </div>
-      ) : null}
+      ) : (
+        <div className="flex items-center justify-center min-h-screen py-2">
+          <div className="loader"></div>
+        </div>
+      )}
     </>
   );
 }
