@@ -7,10 +7,12 @@ import { useRouter } from "next/navigation";
 
 const AuthContext = createContext<{
   loggedin: boolean;
+  fetchData: () => void;
   avatar: string;
   setLoggedin: (value: boolean) => void;
   logout: () => void;
 }>({
+  fetchData: () => {},
   loggedin: false,
   avatar: "",
   setLoggedin: () => {},
@@ -34,6 +36,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setLoggedin(true);
     } catch (error: any) {
       console.error("Error getting user details");
+      localStorage.removeItem("user");
     }
   };
 
@@ -43,6 +46,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const user = localStorage.getItem("user");
       if (user && user !== null) {
         setLoggedin(true);
+      } else {
+        setLoggedin(false);
       }
     }
     fetchData();
@@ -61,7 +66,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   return (
-    <AuthContext.Provider value={{ avatar, loggedin, setLoggedin, logout }}>
+    <AuthContext.Provider
+      value={{ fetchData, avatar, loggedin, setLoggedin, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

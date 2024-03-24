@@ -43,9 +43,11 @@ export default function ProfilePage() {
             <img
               src={data.avatar}
               alt="avatar"
-              width={150}
-              height={150}
-              className="rounded-full"
+              // width={150}
+              // height={150}
+              className="rounded-full w-44 h-44
+              
+              "
             />
             <h1 className="text-2xl font-bold mt-5">{data.name}</h1>
             <p className="text-gray-500">{data.username}</p>

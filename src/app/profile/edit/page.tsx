@@ -3,6 +3,9 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useEdgeStore } from "@/lib/edgestore";
+import { SingleImageDropzone } from "@/lib/components/SingleImageDropzone";
+import { useAuth } from "@/contexts/authContext";
 import {
   Button,
   Dialog,
@@ -10,6 +13,7 @@ import {
   DialogBody,
   DialogFooter,
 } from "@material-tailwind/react";
+
 
 interface User {
   avatar: string;
@@ -44,6 +48,16 @@ export default function EditProfile() {
   const [passwordField, setPasswordField] = useState(false);
   const [confirmPasswordFlag, setConfirmPasswordFlag] = useState(false);
   const [open, setOpen] = React.useState(false);
+  const [file, setFile] = useState<File>();
+  const [progress, setProgress] = useState<number>(0);
+  const [urls, setUrls] = useState<{
+    url: string;
+    thumbnailUrl: string | null;
+  }>();
+
+  const { fetchData } = useAuth();
+
+  const { edgestore } = useEdgeStore();
 
   const handleOpen = () => setOpen(!open);
 
@@ -78,6 +92,7 @@ export default function EditProfile() {
       setLoading(true);
       const response = await axios.post("/api/users/edit", user);
       console.log(response.data);
+      fetchData();
       toast.success("Edit successful!");
       router.push("/profile");
     } catch (error: any) {
@@ -175,12 +190,12 @@ export default function EditProfile() {
                         src={data.avatar}
                         alt="Bordered avatar"
                       />
-                      <div className="flex flex-col space-y-5 sm:ml-8">
+                      <div className="flex flex-col  space-y-5 sm:ml-8 flex flex-col items-center text-center">
                         <Button onClick={handleOpen} variant="gradient">
-                          Open Dialog
+                          Change Image
                         </Button>
                         <Dialog
-                          className="dark"
+                          className="flex flex-col items-center m-6 gap-2 w-96 mx-auto bg-gray-600"
                           open={open}
                           handler={handleOpen}
                           animate={{
@@ -190,11 +205,56 @@ export default function EditProfile() {
                         >
                           <DialogHeader>Its a simple dialog.</DialogHeader>
                           <DialogBody>
-                            The key to more success is to have a lot of pillows.
-                            Put it this way, it took me twenty five years to get
-                            these plants, twenty five years of blood sweat and
-                            tears, and I&apos;m never giving up, I&apos;m just
-                            getting started. I&apos;m up to something. Fan luv.
+                            <SingleImageDropzone
+                              width={200}
+                              height={200}
+                              value={file}
+                              // dropzoneOptions={{
+                              //   maxSize: 1024 * 1024 * 1,
+                              // }}
+                              onChange={(file) => {
+                                setFile(file);
+                              }}
+                            />
+                            <div className="h-[6px] w-44 border rounded overflow-hidden flex flex-col mx-auto">
+                              <div
+                                className="h-full bg-white transition-all duration-300 ease-in-out"
+                                style={{
+                                  width: `${progress}%`,
+                                }}
+                              />
+                            </div>
+                            <div className="flex flex-col">
+                            <button
+                              className="bg-white text-black rounded px-4 hover:opacity-80 mt-5"
+                              onClick={async () => {
+                                if (file) {
+                                  const res =
+                                    await edgestore.myPublicImages.upload({
+                                      file,
+                                      onProgressChange: (progress) => {
+                                        setProgress(progress);
+                                      },
+                                    });
+                                  // save data
+                                  setUrls({
+                                    url: res.url,
+                                    thumbnailUrl: res.thumbnailUrl,
+                                  });
+                                  setUser({ ...user, avatar: res.url });
+                                }
+                              }}
+                            >
+                              Upload
+                            </button>
+                            <button
+                              className="bg-white text-black rounded px-4 hover:opacity-80 mt-5"
+                              onClick={onEdit}
+                            >
+                              Save
+                            </button>
+                              </div>
+                            
                           </DialogBody>
                           <DialogFooter>
                             <Button
