@@ -1,11 +1,6 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        required: [true, 'Username is required'],
-        unique: true,
-    },
     name: {
         type: String,
         required: [true, 'Name is required'],
@@ -15,21 +10,19 @@ const userSchema = new mongoose.Schema({
         required: [true, 'Email is required'],
         unique: true,
     },
-    bio: {
+    dateOfBirth: {
+        type: Date,
+    },
+    gender: {
         type: String,
-        default: '',
     },
     password: {
         type: String,
         required: [true, 'Password is required'],
     },
-    avatar: {
+    userType: {
         type: String,
-        default: 'https://www.gravatar.com/avatar/?d=mp',
-    },
-    isVerified: {
-        type: Boolean,
-        default: false,
+        default: 'user',
     },
     isAdmin: {
         type: Boolean,

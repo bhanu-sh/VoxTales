@@ -50,11 +50,9 @@ const Links = () => {
         {loggedin ? (
           <>
             <Link href="/profile">
-              <img
-                src={avatarSrc}
-                alt="user avatar"
-                className="rounded-full h-12 w-12 hover:border-2 hover:border-red-500 cursor-pointer"
-              />
+              <button>
+                Profile
+              </button>
             </Link>
             {/* {isAdmin && <NavLink item={{ title: "Admin", path: "/admin" }} />} */}
             <button className={styles.logout} onClick={logout}>
