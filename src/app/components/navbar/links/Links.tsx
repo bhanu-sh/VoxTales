@@ -33,7 +33,7 @@ const Links = () => {
 
   useEffect(() => {
     // Check if localStorage is available (i.e., if running on the client side)
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const userItem = localStorage.getItem("user");
       if (userItem) {
         setAvatarSrc(JSON.parse(userItem).avatar);
@@ -50,9 +50,7 @@ const Links = () => {
         {loggedin ? (
           <>
             <Link href="/profile">
-              <button>
-                Profile
-              </button>
+              <button>Profile</button>
             </Link>
             {/* {isAdmin && <NavLink item={{ title: "Admin", path: "/admin" }} />} */}
             <button className={styles.logout} onClick={logout}>
@@ -60,7 +58,10 @@ const Links = () => {
             </button>
           </>
         ) : (
-          <NavLink item={{ title: "Login", path: "/login" }} />
+          <>
+            <NavLink item={{ title: "Login", path: "/login" }} />
+            <NavLink item={{ title: "Signup", path: "/signup" }} />
+          </>
         )}
       </div>
       {open ? (
