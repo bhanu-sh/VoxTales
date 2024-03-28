@@ -15,38 +15,10 @@ export default function SignupPage() {
     password: "",
   });
   const [buttonDisabled, setButtonDisabled] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [userType, setUserType] = useState("User");
 
   const userActiveStyle = "border-b-4 border-blue-400";
   const artistActiveStyle = "border-b-4 border-red-600";
-
-  const onSignup = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.post("/api/users/signup", user);
-      console.log("Signup Success", response.data);
-      toast.success("Signup Success");
-      router.push("/login");
-    } catch (error: any) {
-      console.log("Signup failed", error.message);
-      toast.error(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (
-      user.email.length > 0 &&
-      user.password.length > 0 &&
-      user.name.length > 0
-    ) {
-      setButtonDisabled(false);
-    } else {
-      setButtonDisabled(true);
-    }
-  }, [user]);
 
   return (
     <div className="flex flex-col w-96 mx-auto justify-center min-h-screen">

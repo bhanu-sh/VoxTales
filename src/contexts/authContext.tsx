@@ -56,6 +56,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const fetchAdminData = async () => {
+    try {
+      const res = await axios.get("/api/admins/me");
+      console.log(res.data);
+      localStorage.setItem("user", JSON.stringify(res.data.data));
+      setLoggedin(true);
+    } catch (error: any) {
+      console.error("Error getting user details");
+      localStorage.removeItem("user");
+    }
+  };
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const userDataString = localStorage.getItem("user") || "{}";
@@ -66,6 +78,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       } else if (user && user !== null && user.userType === "user") {
         setLoggedin(true);
         fetchUserData();
+      } else if (user && user !== null && user.userType === "admin") {
+        setLoggedin(true);
+        fetchAdminData();
       } else {
         setLoggedin(false);
       }

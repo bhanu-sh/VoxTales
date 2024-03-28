@@ -36,6 +36,10 @@ const artistSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    followers: {
+        type: [String],
+        default: [],
+    },
     isVerified: {
         type: Boolean,
         default: false,

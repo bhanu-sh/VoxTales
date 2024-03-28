@@ -23,6 +23,10 @@ const links = [
     title: "Genres",
     path: "/podcasts/genres",
   },
+  {
+    title: "Artists",
+    path: "/artists",
+  }
 ];
 
 const Links = () => {

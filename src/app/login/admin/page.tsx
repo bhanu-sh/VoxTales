@@ -6,7 +6,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useAuth } from "@/contexts/authContext";
 
-export default function LoginPage() {
+export default function AdminLoginPage() {
   const router = useRouter();
   const [user, setUser] = React.useState({
     email: "",
@@ -14,22 +14,19 @@ export default function LoginPage() {
   });
   const [buttonDisabled, setButtonDisabled] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+
   const { setLoggedin } = useAuth();
-  const [userType, setUserType] = React.useState("User");
 
-  const userActiveStyle = "border-b-4 border-blue-400";
-  const artistActiveStyle = "border-b-4 border-red-600";
-
-  const userLogin = async () => {
+  const adminLogin = async () => {
     try {
       setLoading(true);
-      const response = await axios.post("/api/users/login", user);
+      const response = await axios.post("/api/admins/login", user);
       console.log(response.data);
       toast.success("Login successful!");
-      const userData = await axios.get("/api/users/me");
+      const userData = await axios.get("/api/admins/me");
       localStorage.setItem("user", JSON.stringify(userData.data.data));
       setLoggedin(true);
-      router.push("/profile");
+      router.push("/admin/dashboard");
     } catch (error: any) {
       console.error("Error logging in", error.response.data.error);
       toast.error(error.response.data.error);
@@ -37,58 +34,12 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
-
-  const artistLogin = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.post("/api/artists/login", user);
-      console.log(response.data);
-      toast.success("Login successful!");
-      const userData = await axios.get("/api/artists/me");
-      localStorage.setItem("user", JSON.stringify(userData.data.data));
-      setLoggedin(true);
-      router.push("/profile");
-    } catch (error: any) {
-      console.error("Error logging in", error.response.data.error);
-      toast.error(error.response.data.error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (user.email.length > 0 && user.password.length > 0) {
-      setButtonDisabled(false);
-    } else {
-      setButtonDisabled(true);
-    }
-  }, [user]);
 
   return (
     <div className="flex flex-col w-96 mx-auto justify-center min-h-screen">
-      <h1 className="text-4xl text-center font-bold">Login</h1>
-      <div className="flex">
-        <button
-          className={
-            "mx-auto w-48 px-4" +
-            " " +
-            (userType === "User" ? userActiveStyle : "")
-          }
-          onClick={() => setUserType("User")}
-        >
-          User
-        </button>
-        <button
-          className={
-            "mx-auto w-48 px-4" +
-            " " +
-            (userType === "Artist" ? artistActiveStyle : "")
-          }
-          onClick={() => setUserType("Artist")}
-        >
-          Artist
-        </button>
-      </div>
+      <h1 className="text-4xl text-center font-bold">
+        <span className="text-red-600">Admin </span>Login
+      </h1>
       <hr />
       <label htmlFor="email">Email</label>
       <input
@@ -110,13 +61,7 @@ export default function LoginPage() {
       />
       <button
         className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 disabled:opacity-50"
-        onClick={
-          userType === "User"
-            ? userLogin
-            : userType === "Artist"
-            ? artistLogin
-            : () => {}
-        }
+        onClick={adminLogin}
         disabled={buttonDisabled || loading}
       >
         Login
