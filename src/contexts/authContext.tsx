@@ -7,16 +7,20 @@ import { useRouter } from "next/navigation";
 
 const AuthContext = createContext<{
   loggedin: boolean;
-  fetchData: () => void;
+  fetchUserData: () => void;
+  fetchArtistData: () => void;
   avatar: string;
   setLoggedin: (value: boolean) => void;
-  logout: () => void;
+  userLogout: () => void;
+  artistLogout: () => void;
 }>({
-  fetchData: () => {},
+  fetchUserData: () => {},
+  fetchArtistData: () => {},
   loggedin: false,
   avatar: "",
   setLoggedin: () => {},
-  logout: () => {},
+  userLogout: () => {},
+  artistLogout: () => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -28,7 +32,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [avatar, setAvatar] = useState("");
   const router = useRouter();
 
-  const fetchData = async () => {
+  const fetchArtistData = async () => {
+    try {
+      const res = await axios.get("/api/artists/me");
+      console.log(res.data);
+      localStorage.setItem("user", JSON.stringify(res.data.data));
+      setLoggedin(true);
+    } catch (error: any) {
+      console.error("Error getting user details");
+      localStorage.removeItem("user");
+    }
+  };
+
+  const fetchUserData = async () => {
     try {
       const res = await axios.get("/api/users/me");
       console.log(res.data);
@@ -42,18 +58,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      // Execute only in the browser environment
-      const user = localStorage.getItem("user");
-      if (user && user !== null) {
+      const userDataString = localStorage.getItem("user") || "{}";
+      const user = JSON.parse(userDataString);
+      if (user && user !== null && user.userType === "artist") {
         setLoggedin(true);
+        fetchArtistData();
+      } else if (user && user !== null && user.userType === "user") {
+        setLoggedin(true);
+        fetchUserData();
       } else {
         setLoggedin(false);
       }
     }
-    fetchData();
   }, []);
 
-  const logout = async () => {
+  const userLogout = async () => {
     try {
       await axios.get("/api/users/logout");
       toast.success("Logout successful!");
@@ -65,9 +84,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const artistLogout = async () => {
+    try {
+      await axios.get("/api/artists/logout");
+      toast.success("Logout successful!");
+      localStorage.removeItem("user");
+      setLoggedin(false);
+      router.push("/login");
+    } catch (error: any) {
+      console.error("Error getting user details", error.message);
+    }
+  };
+
   return (
     <AuthContext.Provider
-      value={{ fetchData, avatar, loggedin, setLoggedin, logout }}
+      value={{
+        fetchUserData,
+        fetchArtistData,
+        avatar,
+        loggedin,
+        setLoggedin,
+        userLogout,
+        artistLogout,
+      }}
     >
       {children}
     </AuthContext.Provider>

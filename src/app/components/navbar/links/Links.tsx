@@ -27,19 +27,19 @@ const links = [
 
 const Links = () => {
   const router = useRouter();
-  const { loggedin, logout } = useAuth();
+  const { loggedin, userLogout, artistLogout } = useAuth();
   const [open, setOpen] = useState(false);
-  const [avatarSrc, setAvatarSrc] = useState("");
+  // const [avatarSrc, setAvatarSrc] = useState("");
 
-  useEffect(() => {
-    // Check if localStorage is available (i.e., if running on the client side)
-    if (typeof window !== "undefined") {
-      const userItem = localStorage.getItem("user");
-      if (userItem) {
-        setAvatarSrc(JSON.parse(userItem).avatar);
-      }
-    }
-  }, [loggedin]);
+  // useEffect(() => {
+  //   // Check if localStorage is available (i.e., if running on the client side)
+  //   if (typeof window !== "undefined") {
+  //     const userItem = localStorage.getItem("user");
+  //     if (userItem && JSON.parse(userItem).avatar !== null && JSON.parse(userItem).avatar !== undefined) {
+  //       setAvatarSrc(JSON.parse(userItem).avatar);
+  //     }
+  //   }
+  // }, [loggedin]);
 
   return (
     <div className={styles.container}>
@@ -53,7 +53,7 @@ const Links = () => {
               <button>Profile</button>
             </Link>
             {/* {isAdmin && <NavLink item={{ title: "Admin", path: "/admin" }} />} */}
-            <button className={styles.logout} onClick={logout}>
+            <button className={styles.logout} onClick={artistLogout}>
               Logout
             </button>
           </>

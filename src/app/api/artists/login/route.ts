@@ -15,12 +15,14 @@ export async function POST(request: NextRequest) {
         // Check if artist already exists
         const artist = await Artist.findOne({email})
         if (!artist) {
+            console.log('Artist does not exist')
             return NextResponse.json({error: 'Artist does not exist'}, {status: 400})
         }
 
         // Check if password is correct
         const validPassword = await bcrypt.compare(password, artist.password)
         if (!validPassword) {
+            console.log('Invalid password')
             return NextResponse.json({error: 'Invalid password'}, {status: 400})
         }
 
@@ -44,6 +46,6 @@ export async function POST(request: NextRequest) {
         return response;
     }
     catch (error: any) {
-        return NextResponse.json({error: error.message}, {status: 500})
+        return NextResponse.json({error: error.message}, {status: 400})
     }
 }

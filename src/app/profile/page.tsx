@@ -17,23 +17,24 @@ interface User {
 
 export default function ProfilePage() {
   const router = useRouter();
-  const [data, setData] = useState<User | null>(null);
-  const { logout } = useAuth();
+  const [data, setData] = useState(JSON.parse(localStorage.getItem("user") || "{}") as User);
+  // const [data, setData] = useState<User | null>(null);
+  // const { logout } = useAuth();
 
-  const getUserDetails = async () => {
-    try {
-      const res = await axios.get("/api/users/me");
-      console.log(res.data);
-      setData(res.data.data);
-    } catch (error: any) {
-      console.error("Error getting user details", error.message);
-      toast.error("Error getting user details");
-    }
-  };
+  // const getUserDetails = async () => {
+  //   try {
+  //     const res = await axios.get("/api/users/me");
+  //     console.log(res.data);
+  //     setData(res.data.data);
+  //   } catch (error: any) {
+  //     console.error("Error getting user details", error.message);
+  //     toast.error("Error getting user details");
+  //   }
+  // };
 
-  useEffect(() => {
-    getUserDetails();
-  }, []);
+  // useEffect(() => {
+  //   getUserDetails();
+  // }, []);
 
   return (
     <>
@@ -55,15 +56,15 @@ export default function ProfilePage() {
             <p className="text-gray-500">{data.bio}</p>
             <Link href="/profile/edit"className="text-blue-500">Edit profile
             </Link>
-            <button
+            {/* <button
               onClick={logout}
               className="bg-red-500 text-white px-3 py-1 rounded-md mt-3"
             >
               Logout
-            </button>
+            </button> */}
           </div>
         </div>
-      ) : null}
+      ) : "No data"}
     </>
   );
 }
