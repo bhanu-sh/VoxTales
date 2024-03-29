@@ -31,8 +31,12 @@ export async function POST(request: NextRequest) {
 
         await artist.save()
         await user.save()
-
-        return NextResponse.json({message: 'Followers updated successfully', success: true})
+        
+        return NextResponse.json({
+            message: 'Followed artist successfully',
+            success: true,
+            followers: artist.followers
+        })
     } catch (error: any) {
         return NextResponse.json({error: error.message}, {status: 500})
     }

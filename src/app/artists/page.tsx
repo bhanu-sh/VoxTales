@@ -5,7 +5,6 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import React, { use, useEffect, useState } from "react";
 import { useAuth } from "@/contexts/authContext";
-import FollowButton from "./../components/Follow/Follow";
 
 interface User {
   avatar: string;
@@ -15,13 +14,14 @@ interface User {
 
 export default function ArtistsPage() {
   const router = useRouter();
-  const [artistData, setArtistData] = useState([]);
+  const [artistData, setArtistData] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
-  const [isFollowing, setIsFollowing] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [userId, setUserId] = useState("");
 
   const followingStyle =
     "bg-gray-200 text-gray-800 px-4 py-2 rounded-lg shadow-md hover:bg-gray-300";
-  const nonFollowingStyle =
+  const followStyle =
     "bg-pink-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-pink-700";
 
   const getArtists = async () => {
@@ -38,6 +38,48 @@ export default function ArtistsPage() {
     }
   };
 
+  const onFollow = async (artistId: string, userId: string) => {
+    try {
+      setLoading(true);
+      const res = await axios.post("/api/follow/edit", {
+        artistId,
+        userId
+      });
+      console.log("Followed artist", res.data);
+      toast.success("Followed artist");
+  
+      // Update artistData with the updated followers data
+      const updatedArtistData = artistData.map((artist: any) => {
+        if (artist._id === artistId) {
+          // Update followers array with the new userId
+          return {
+            ...artist,
+            followers: res.data.followers // Assuming the API response includes updated followers data
+          };
+        }
+        return artist;
+      });
+  
+      setArtistData(updatedArtistData);
+    } catch (error: any) {
+      console.error("Error following artist", error.message);
+      toast.error("Error following artist");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // Check if localStorage is available (client-side)
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+        setUserId(JSON.parse(storedUser)._id);
+      }
+    }
+  }, []);
+
   const displayArtists = () => {
     return artistData.map((artist: any) => {
       return (
@@ -49,15 +91,27 @@ export default function ArtistsPage() {
           />
           <h1 className="text-2xl font-bold mt-2">{artist.name}</h1>
           <p className="text-gray-500">{artist.bio}</p>
-          {}
+          {artist.followers ? (
+            <>{artist.followers.length} followers</>
+          ) : (
+            <>0 followers</>
+          )}
           <p>
-            { artist.followers.length } followers
-            <button
-              className={isFollowing ? followingStyle : nonFollowingStyle}
-              onClick={() => setIsFollowing(!isFollowing)}
-            >
-              {isFollowing ? "Following" : "Follow"}
-            </button> 
+            {artist.followers && artist.followers.includes(userId) ? (
+              <button
+                className={followingStyle}
+                onClick={() => user && onFollow(artist._id, userId)}
+              >
+                Unfollow
+              </button>
+            ) : (
+              <button
+                className={followStyle}
+                onClick={() => user && onFollow(artist._id, userId)}
+              >
+                Follow
+              </button>
+            )}
           </p>
           <Link href={`/artists/${artist._id}`}>View artist</Link>
         </div>
@@ -72,15 +126,9 @@ export default function ArtistsPage() {
   return (
     <div className="p-2">
       <h1>Artists</h1>
-      {loading ? (
-        <div className="flex flex-col items-center justify-center min-h-80">
-          <div className="loader"></div>
-        </div>
-      ) : (
-        <div className="max-w-4xl flex h-auto flex-wrap mx-auto lg:my-0 justify-between mt-5 text-center">
-          {displayArtists()}
-        </div>
-      )}
+      <div className="max-w-4xl flex h-auto flex-wrap mx-auto lg:my-0 justify-between mt-5 text-center">
+        {displayArtists()}
+      </div>
     </div>
   );
 }
