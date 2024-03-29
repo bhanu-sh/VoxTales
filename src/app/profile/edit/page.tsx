@@ -17,21 +17,24 @@ import {
 
 interface User {
   avatar: string;
-  username: string;
+  gender: string;
   name: string;
-  bio: string;
+  dob: Date;
   email: string;
   newPassword: string;
 }
 
 export default function EditProfile() {
   const router = useRouter();
+
+  const { fetchUserData } = useAuth();
   const [user, setUser] = useState({
     avatar: "",
     username: "",
     name: "",
-    bio: "",
+    dob: "",
     email: "",
+    gender: "",
     oldPassword: "",
     newPassword: "",
   });
@@ -42,8 +45,7 @@ export default function EditProfile() {
   const [notifications, setNotifications] = useState(false);
   const [pro, setPro] = useState(false);
   const [fullNamefield, setFullNameField] = useState(false);
-  const [usernameField, setUsernameField] = useState(false);
-  const [bioField, setBioField] = useState(false);
+  const [dobField, setDobField] = useState(false);
   const [emailField, setEmailField] = useState(false);
   const [passwordField, setPasswordField] = useState(false);
   const [confirmPasswordFlag, setConfirmPasswordFlag] = useState(false);
@@ -72,7 +74,8 @@ export default function EditProfile() {
         avatar: res.data.data.avatar,
         username: res.data.data.username,
         name: res.data.data.name,
-        bio: res.data.data.bio,
+        dob: res.data.data.dob,
+        gender: res.data.data.gender,
         email: res.data.data.email,
         oldPassword: "",
         newPassword: "",
@@ -91,6 +94,7 @@ export default function EditProfile() {
       const response = await axios.post("/api/users/edit", user);
       console.log(response.data);
       toast.success("Edit successful!");
+      fetchUserData();
       router.push("/profile");
     } catch (error: any) {
       console.error("Error editing profile", error.message);
@@ -316,65 +320,35 @@ export default function EditProfile() {
                           ) : null}
                         </div>
                       </div>
-                      <div className="mb-2 sm:mb-6">
-                        <label
-                          htmlFor="username"
-                          className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
-                        >
-                          Your username
-                          <button
-                            className="text-indigo-700 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-500 focus:outline-none"
-                            onClick={() => setUsernameField(!usernameField)}
-                          >
-                            &nbsp; {usernameField ? "Cancel" : "Edit"}
-                          </button>
-                        </label>
-                        <p>{user.username}</p>
-                        {usernameField ? (
-                          <>
-                            <input
-                              type="text"
-                              id="username"
-                              className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                              placeholder="Your username"
-                              onChange={(e) =>
-                                setUser({ ...user, username: e.target.value })
-                              }
-                            />
-                            <div className="flex justify-end">
-                              <button
-                                onClick={onEdit}
-                                type="submit"
-                                className="text-white bg-indigo-700  hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
-                              >
-                                Save
-                              </button>
-                            </div>
-                          </>
-                        ) : null}
-                      </div>
                       <div className="mb-6">
                         <label
-                          htmlFor="message"
+                          htmlFor="date_of_birth"
                           className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
                         >
-                          Bio
+                          Date of Birth
                           <button
                             className="text-indigo-700 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-500 focus:outline-none"
-                            onClick={() => setBioField(!bioField)}
+                            onClick={() => setDobField(!dobField)}
                           >
-                            &nbsp;{bioField ? "Cancel" : "Edit"}
+                            &nbsp;{dobField ? "Cancel" : "Edit"}
                           </button>
                         </label>
-                        <p>{user.bio}</p>
-                        {bioField ? (
+                        <p>
+                          {user.dob && user.dob.length > 0 ? (
+                            <div>{user.dob}</div>
+                          ) : (
+                            <div className="text-red-600">Please Enter Date of Birth</div>
+                          )}
+                        </p>
+                        {dobField ? (
                           <>
-                            <textarea
-                              id="bio"
+                            <input
+                              type="date"
+                              id="dob"
                               className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
-                              placeholder="Your bio"
+                              placeholder="Date of birth"
                               onChange={(e) =>
-                                setUser({ ...user, bio: e.target.value })
+                                setUser({ ...user, dob: e.target.value })
                               }
                             />
                             <div className="flex justify-end">

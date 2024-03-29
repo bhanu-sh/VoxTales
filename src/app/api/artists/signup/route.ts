@@ -9,7 +9,7 @@ connect()
 export async function POST(request: NextRequest) {
     try {
         const reqBody = await request.json()
-        const {email, password, name} = reqBody
+        const {avatar, email, password, name} = reqBody
 
         console.log(reqBody);
 
@@ -26,6 +26,7 @@ export async function POST(request: NextRequest) {
 
         // Create new user
         const newUser = new Artist({
+            avatar,
             email,
             name,
             password: hashedPassword

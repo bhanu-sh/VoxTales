@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
     const path = request.nextUrl.pathname
 
-    const isPublicPath = path === '/login' || path === '/' || path === '/signup' || path === '/verifyemail' || path === '/signup/admin' || path === '/login/admin'
+    const isPublicPath = path === '/login' || path === '/' || path === '/signup' || path === '/verifyemail' || path === '/signup/admin' 
 
     const isAdminPath = path === '/admin'
 
@@ -34,6 +34,5 @@ export const config = {
         "/verifyemail",
         "/admin",
         "/signup/admin",
-        "/login/admin",
     ]
 };

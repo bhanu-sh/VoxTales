@@ -3,23 +3,34 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { Link } from "lucide-react";
+import { useEdgeStore } from "@/lib/edgestore";
+import { SingleImageDropzone } from "@/lib/components/SingleImageDropzone";
 
 const ArtistSignup = () => {
   const router = useRouter();
 
   const [artist, setArtist] = useState({
+    avatar: "",
     name: "",
     email: "",
     password: "",
   });
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [file, setFile] = useState<File>();
+  const [progress, setProgress] = useState<number>(0);
+  const { edgestore } = useEdgeStore();
+  const [uploaded, setUploaded] = useState(false);
 
   const onSignup = async () => {
     try {
       setLoading(true);
       const response = await axios.post("/api/artists/signup", artist);
       console.log("Signup Success", response.data);
+      await edgestore.myPublicImages.confirmUpload({
+        url: artist.avatar,
+      });
       toast.success("Signup Success");
       router.push("/login");
     } catch (error: any) {
@@ -32,6 +43,7 @@ const ArtistSignup = () => {
 
   useEffect(() => {
     if (
+      artist.avatar.length > 0 &&
       artist.email.length > 0 &&
       artist.password.length > 0 &&
       artist.name.length > 0
@@ -44,6 +56,55 @@ const ArtistSignup = () => {
 
   return (
     <>
+      <div className="flex flex-col items-center m-6 gap-2">
+        <SingleImageDropzone
+          width={200}
+          height={200}
+          value={file}
+          dropzoneOptions={{
+            maxSize: 1024 * 1024 * 1,
+          }}
+          onChange={async (newFile) => {
+            setFile(newFile);
+            setUploaded(false);
+          }}
+        />
+        {!uploaded ? (
+          <>
+            <div className="h-[6px] w-44 border rounded overflow-hidden">
+              <div
+                className="h-full bg-white transition-all duration-300 ease-in-out"
+                style={{
+                  width: `${progress}%`,
+                }}
+              />
+            </div>
+            <button
+              className="bg-white text-black rounded px-4 hover:opacity-80"
+              onClick={async () => {
+                if (file) {
+                  const res = await edgestore.myPublicImages.upload({
+                    file,
+                    options: {
+                      temporary: true,
+                    },
+                    onProgressChange: (progress) => {
+                      setProgress(progress);
+                    },
+                  });
+                  // save data
+                  setArtist({ ...artist, avatar: res.url });
+                  setUploaded(true);
+                }
+              }}
+            >
+              Upload
+            </button>
+          </>
+        ) : (
+          "Uploaded"
+        )}
+      </div>
       <label htmlFor="name">Name</label>
       <input
         className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 text-black"

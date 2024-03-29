@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Assuming the request body contains updated user profile data
-        const { avatar, username, name, bio, email, oldPassword, newPassword } = await request.json();
+        const { avatar, name, dob, gender, email, oldPassword, newPassword } = await request.json();
 
         // Update user profile fields
         if (name) {
@@ -30,16 +30,16 @@ export async function POST(request: NextRequest) {
             user.email = email;
         }
 
-        if (username) {
-            user.username = username;
-        }
-
         if (avatar) {
             user.avatar = avatar;
         }
 
-        if (bio) {
-            user.bio = bio;
+        if (dob) {
+            user.dateOfBitrh = dob;
+        }
+
+        if (gender) {
+            user.gender = gender;
         }
 
         if (oldPassword && newPassword) {

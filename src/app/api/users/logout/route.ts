@@ -6,6 +6,7 @@ export async function GET() {
       message: "Logout successful",
       success: true,
     });
+    // Set the cookies expiration date to the past
     response.cookies.set("token", "", {
       httpOnly: true,
       expires: new Date(0),
