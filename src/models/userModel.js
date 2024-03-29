@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
+    avatar: {
+        type: String,
+        default: 'https://www.gravatar.com/avatar/?d=mp',
+    },
     name: {
         type: String,
         required: [true, 'Name is required'],

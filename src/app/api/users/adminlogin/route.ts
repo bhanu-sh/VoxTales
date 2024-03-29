@@ -12,30 +12,31 @@ export async function POST(request: NextRequest) {
         const {email, password} = reqBody;
         console.log(reqBody);
 
-        // Check if user already exists
-        const user = await User.findOne({email})
-        if (!user) {
-            return NextResponse.json({error: 'User does not exist'}, {status: 400})
+        // Check if admin already exists
+        const admin = await User.findOne
+        ({email})
+
+        if (!admin) {
+            console.log('Admin does not exist')
+            return NextResponse.json({error: 'Admin does not exist'}, {status: 400})
         }
 
         // Check if password is correct
-        const validPassword = await bcrypt.compare(password, user.password)
+        const validPassword = await bcrypt.compare(password, admin.password)
         if (!validPassword) {
+            console.log('Invalid password')
             return NextResponse.json({error: 'Invalid password'}, {status: 400})
         }
 
-        const userType = user.userType
-
         // Create token data
         const tokenData = {
-            id: user._id,
-            username: user.username,
-            email: user.email
+            id: admin._id,
+            email: admin.email
         }
 
         // Create token
         const token = jwt.sign(tokenData, process.env.TOKEN_SECRET!, {expiresIn: '1d'})
-        
+
         const response = NextResponse.json({
             message: 'Login successful',
             success: true,
@@ -43,14 +44,14 @@ export async function POST(request: NextRequest) {
         response.cookies.set('token', token, {
             httpOnly: true,
         })
-        if (userType === 'admin') {
-            response.cookies.set('isAdmin', 'true', {
-                httpOnly: true,
-            })
-        }
+        response.cookies.set('isAdmin', 'true', {
+            httpOnly: true,
+        })
+        
         return response;
+    }
 
-    } catch (error: any) {
-        return NextResponse.json({error: error.message}, {status: 500})
+    catch (error: any) {
+        return NextResponse.json({error: error.message}, {status: 400})
     }
 }

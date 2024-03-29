@@ -11,16 +11,16 @@ const AuthContext = createContext<{
   fetchArtistData: () => void;
   avatar: string;
   setLoggedin: (value: boolean) => void;
-  userLogout: () => void;
-  artistLogout: () => void;
+  isAdmin: boolean;
+  logout: () => void;
 }>({
   fetchUserData: () => {},
   fetchArtistData: () => {},
   loggedin: false,
   avatar: "",
   setLoggedin: () => {},
-  userLogout: () => {},
-  artistLogout: () => {},
+  isAdmin: false,
+  logout: () => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -31,6 +31,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loggedin, setLoggedin] = useState(false);
   const [avatar, setAvatar] = useState("");
   const router = useRouter();
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const fetchArtistData = async () => {
     try {
@@ -56,18 +57,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const fetchAdminData = async () => {
-    try {
-      const res = await axios.get("/api/admins/me");
-      console.log(res.data);
-      localStorage.setItem("user", JSON.stringify(res.data.data));
-      setLoggedin(true);
-    } catch (error: any) {
-      console.error("Error getting user details");
-      localStorage.removeItem("user");
-    }
-  };
-
   useEffect(() => {
     if (typeof window !== "undefined") {
       const userDataString = localStorage.getItem("user") || "{}";
@@ -80,28 +69,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         fetchUserData();
       } else if (user && user !== null && user.userType === "admin") {
         setLoggedin(true);
-        fetchAdminData();
+        setIsAdmin(true);
+        fetchUserData();
       } else {
         setLoggedin(false);
       }
     }
-  }, []);
+  }, [loggedin] || []);
 
-  const userLogout = async () => {
+  const logout = async () => {
     try {
       await axios.get("/api/users/logout");
-      toast.success("Logout successful!");
-      localStorage.removeItem("user");
-      setLoggedin(false);
-      router.push("/login");
-    } catch (error: any) {
-      console.error("Error getting user details", error.message);
-    }
-  };
-
-  const artistLogout = async () => {
-    try {
-      await axios.get("/api/artists/logout");
       toast.success("Logout successful!");
       localStorage.removeItem("user");
       setLoggedin(false);
@@ -119,8 +97,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         avatar,
         loggedin,
         setLoggedin,
-        userLogout,
-        artistLogout,
+        isAdmin,
+        logout,
       }}
     >
       {children}

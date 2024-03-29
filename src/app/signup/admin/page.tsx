@@ -19,7 +19,7 @@ export default function AdminSignupPage() {
   const onSignup = async () => {
     try {
       setLoading(true);
-      const response = await axios.post("/api/admins/signup", admin);
+      const response = await axios.post("/api/users/adminsignup", admin);
       console.log("Signup Success", response.data);
       toast.success("Signup Success");
       router.push("/login");

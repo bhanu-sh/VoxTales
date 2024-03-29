@@ -26,7 +26,7 @@ export default function AdminLoginPage() {
       const userData = await axios.get("/api/admins/me");
       localStorage.setItem("user", JSON.stringify(userData.data.data));
       setLoggedin(true);
-      router.push("/admin/dashboard");
+      router.push("/admin");
     } catch (error: any) {
       console.error("Error logging in", error.response.data.error);
       toast.error(error.response.data.error);

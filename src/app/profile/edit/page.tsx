@@ -55,8 +55,6 @@ export default function EditProfile() {
     thumbnailUrl: string | null;
   }>();
 
-  const { fetchData } = useAuth();
-
   const { edgestore } = useEdgeStore();
 
   const handleOpen = () => setOpen(!open);
@@ -92,7 +90,6 @@ export default function EditProfile() {
       setLoading(true);
       const response = await axios.post("/api/users/edit", user);
       console.log(response.data);
-      fetchData();
       toast.success("Edit successful!");
       router.push("/profile");
     } catch (error: any) {
@@ -190,8 +187,8 @@ export default function EditProfile() {
                         src={data.avatar}
                         alt="Bordered avatar"
                       />
-                      <div className="flex flex-col  space-y-5 sm:ml-8 flex flex-col items-center text-center">
-                        <Button onClick={handleOpen} variant="gradient">
+                      <div className="flex flex-col  space-y-5 sm:ml-8 items-center text-center">
+                        <Button onClick={handleOpen} variant="gradient" placeholder="">
                           Change Image
                         </Button>
                         <Dialog
@@ -202,9 +199,10 @@ export default function EditProfile() {
                             mount: { scale: 1, y: 0 },
                             unmount: { scale: 0.9, y: -100 },
                           }}
+                          placeholder="Dialog Placeholder"
                         >
-                          <DialogHeader>Its a simple dialog.</DialogHeader>
-                          <DialogBody>
+                          <DialogHeader placeholder="">Its a simple dialog.</DialogHeader>
+                            <DialogBody placeholder="">
                             <SingleImageDropzone
                               width={200}
                               height={200}
@@ -256,17 +254,19 @@ export default function EditProfile() {
                               </div>
                             
                           </DialogBody>
-                          <DialogFooter>
+                            <DialogFooter placeholder="">
                             <Button
                               variant="text"
                               color="red"
                               onClick={handleOpen}
                               className="mr-1"
+                              placeholder=""
                             >
                               <span>Cancel</span>
                             </Button>
                             <Button
                               variant="gradient"
+                              placeholder=""
                               color="green"
                               onClick={handleOpen}
                             >
