@@ -19,6 +19,9 @@ export default function ArtistsPage() {
   const [user, setUser] = useState<User | null>(null);
   const [userId, setUserId] = useState("");
 
+  const { loggedin } = useAuth();
+
+  //styles for follow button
   const followingStyle =
     "bg-gray-200 text-gray-800 px-4 py-2 rounded-lg shadow-md hover:bg-gray-300";
   const followStyle =
@@ -107,7 +110,13 @@ export default function ArtistsPage() {
             ) : (
               <button
                 className={followStyle}
-                onClick={() => user && onFollow(artist._id, userId)}
+                onClick={() => {
+                  if(loggedin) {
+                    onFollow(artist._id, userId)
+                  } else {
+                    router.push("/login");
+                  }
+                }}
               >
                 Follow
               </button>
