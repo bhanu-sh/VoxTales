@@ -12,6 +12,7 @@ const AuthContext = createContext<{
   avatar: string;
   setLoggedin: (value: boolean) => void;
   isAdmin: boolean;
+  userType: "user" | "artist" | "admin";
   logout: () => void;
 }>({
   fetchUserData: () => {},
@@ -19,6 +20,7 @@ const AuthContext = createContext<{
   loggedin: false,
   avatar: "",
   setLoggedin: () => {},
+  userType: "user",
   isAdmin: false,
   logout: () => {},
 });
@@ -32,6 +34,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [avatar, setAvatar] = useState("");
   const router = useRouter();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [userType, setUserType] = useState("user" as "user" | "artist" | "admin");
 
   const fetchArtistData = async () => {
     try {
@@ -62,12 +65,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const userDataString = localStorage.getItem("user") || "{}";
       const user = JSON.parse(userDataString);
       if (user && user !== null && user.userType === "artist") {
+        setUserType("artist");
         setLoggedin(true);
         fetchArtistData();
       } else if (user && user !== null && user.userType === "user") {
+        setUserType("user");
         setLoggedin(true);
         fetchUserData();
       } else if (user && user !== null && user.userType === "admin") {
+        setUserType("admin");
         setLoggedin(true);
         setIsAdmin(true);
         fetchUserData();
@@ -97,6 +103,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         avatar,
         loggedin,
         setLoggedin,
+        userType,
         isAdmin,
         logout,
       }}

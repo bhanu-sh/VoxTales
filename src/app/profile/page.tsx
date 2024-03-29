@@ -1,4 +1,5 @@
 "use client";
+import { useAuth } from "@/contexts/authContext";
 import axios from "axios";
 import Link from "next/link";
 import React, { use, useEffect, useState } from "react";
@@ -11,6 +12,8 @@ interface User {
   name: string;
   email: string;
   bio: string;
+  followers: any;
+  podcasts: any;
 }
 
 export default function ProfilePage() {
@@ -19,6 +22,8 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(false);
   const [artistData, setArtistData] = useState<User[]>([]);
   const [followingCount, setFollowingCount] = useState(0);
+
+  const { userType, loggedin } = useAuth();
 
   const getUserDetails = async () => {
     try {
@@ -30,6 +35,19 @@ export default function ProfilePage() {
     } catch (error: any) {
       console.error("Error getting user details", error.message);
       toast.error("Error getting user details");
+    } finally {
+    }
+  };
+
+  const getArtistDetails = async () => {
+    try {
+      const res = await axios.get("/api/artists/me");
+      console.log(res.data);
+      setData(res.data.data);
+      setUserId(res.data.data._id);
+    } catch (error: any) {
+      console.error("Error getting Artist details", error.message);
+      toast.error("Error getting Artist details");
     } finally {
     }
   };
@@ -79,10 +97,18 @@ export default function ProfilePage() {
   };
 
   useEffect(() => {
-    getUserDetails();
-    getArtists();
-  }, []);
-
+    //check for user type and fetch data accordingly and fetch userdata for admin type as well
+    if (loggedin) {
+      if (userType === "user" || userType === "admin") {
+        getUserDetails();
+        getArtists();
+      } else if (userType === "artist") {
+        getArtistDetails();
+      }
+    }
+  }
+  , [loggedin]);
+    
   const displayArtists = () => {
     return artistData.map((artist: any) => {
       if (artist.followers.includes(userId))
@@ -133,14 +159,63 @@ export default function ProfilePage() {
             </div>
           </div>
           <div className="mt-12">
-            <h1 className="text-4xl flex">
-              Following:
-              <span className="ml-2 mt-1 flex h-10 w-10 items-center justify-center rounded-full bg-red-700 text-base">
-                {" " + followingCount}
-              </span>
-            </h1>
-            <h1 className="text-4xl mt-5">Followed artists:</h1>
-            <div className="mt-5">{displayArtists()}</div>
+            {userType !== "artist" ? (
+              <>
+                <h1 className="text-4xl flex">
+                  Following:
+                  <span className="ml-2 mt-1 flex h-10 w-10 items-center justify-center rounded-full bg-red-700 text-base">
+                    {" " + followingCount}
+                  </span>
+                </h1>
+                <h1 className="text-4xl mt-5">Followed artists:</h1>
+                <div className="mt-5">{displayArtists()}</div>
+              </>
+            ) : (
+              <>
+                <h1 className="text-4xl flex">
+                  Followers: {data.followers.length}
+                </h1>
+                <div className="mt-5">
+                  <h1 className="text-4xl">Your podcasts:</h1>
+                  {data.podcasts && data.podcasts.length == 0 ? (
+                    <div className="mt-5">
+                      <p className="text-gray-500">
+                        You have not added any podcasts yet.
+                      </p>
+                      <button className="bg-red-600 text-white px-4 mt-5 py-2 rounded-lg shadow-md hover:bg-red-700 w-48">
+                        <Link href="/podcasts/create" className="text-blue-500">
+                          Add podcast
+                        </Link>
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="mt-5">
+                      {data.podcasts.map((podcast: any) => (
+                        <div
+                          key={podcast._id}
+                          className="flex flex-row justify-between items-center my-5"
+                        >
+                          <div className="flex flex-row items-center">
+                            <img
+                              src={podcast.thumbnail}
+                              alt="thumbnail"
+                              className="w-16 h-16"
+                            />
+                            <div className="ml-5">
+                              <h1 className="text-2xl">{podcast.title}</h1>
+                              <p className="text-gray-500">{podcast.description}</p>
+                            </div>
+                          </div>
+                          <button className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg shadow-md hover:bg-gray-300">
+                            <Link href={`/podcasts/${podcast._id}`}>View</Link>
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
           </div>
         </div>
       ) : (

@@ -40,6 +40,10 @@ const artistSchema = new mongoose.Schema({
         type: [String],
         default: [],
     },
+    podcasts: {
+        type: [String],
+        default: [],
+    },
     isVerified: {
         type: Boolean,
         default: false,
