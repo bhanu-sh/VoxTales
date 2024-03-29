@@ -1,3 +1,5 @@
+import GenreCards from "./components/GenreCards/GenreCards"; 
+
 export default function Home() {
   return (
     <div>
@@ -7,6 +9,7 @@ export default function Home() {
       <h3 className="tagline">
         Elevating Storytelling with Fully Voice-Operated Podcasts
       </h3>
+      <GenreCards />
     </div>
   );
 }

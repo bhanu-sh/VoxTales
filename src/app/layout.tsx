@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 import Navbar from "./components/navbar/Navbar";
 import { AuthProvider } from "@/contexts/authContext";
 import { EdgeStoreProvider } from "@/lib/edgestore";
+import Footer from './components/footer/Footer';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,12 +22,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="container mx-auto">
+        <div className="flex flex-col min-h-screen">
           <Toaster position="bottom-center" />
           <AuthProvider>
+            <div className="flex-grow px-12">
             <Navbar />
-            <EdgeStoreProvider>{children}</EdgeStoreProvider>
+            <EdgeStoreProvider >{children}</EdgeStoreProvider>
+            </div>
           </AuthProvider>
+          <div className=" min-w-full ">
+            <Footer />
+          </div>
         </div>
       </body>
     </html>

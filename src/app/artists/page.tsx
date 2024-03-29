@@ -49,7 +49,7 @@ export default function ArtistsPage() {
         userId
       });
       console.log("Followed artist", res.data);
-      toast.success("Followed artist");
+      toast.success(res.data.message);
   
       // Update artistData with the updated followers data
       const updatedArtistData = artistData.map((artist: any) => {
@@ -66,7 +66,7 @@ export default function ArtistsPage() {
       setArtistData(updatedArtistData);
     } catch (error: any) {
       console.error("Error following artist", error.message);
-      toast.error("Error following artist");
+      toast.error("Error");
     } finally {
       setLoading(false);
     }

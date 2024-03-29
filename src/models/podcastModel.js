@@ -25,6 +25,10 @@ const podcastSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    genre: {
+        type: String,
+        required: [true, 'Genre is required'],
+    },
     createdAt: {
         type: Date,
         default: Date.now,

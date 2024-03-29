@@ -19,6 +19,11 @@ export async function POST(request: NextRequest) {
             category
         })
 
+        // Save podcast
+        await newPodcast.save()
+
+        return NextResponse.json({message: 'Podcast added successfully'}, {status: 201})
+
     } catch (error: any) {
         return NextResponse.json({error: error.message}, {status: 500})
     }
