@@ -1,11 +1,6 @@
 "use client";
-import axios from "axios";
 import Link from "next/link";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 import React, { use, useEffect, useState } from "react";
-import Image from "next/image";
-import { useAuth } from "@/contexts/authContext";
 
 interface User {
   username: string;
@@ -16,25 +11,17 @@ interface User {
 }
 
 export default function ProfilePage() {
-  const router = useRouter();
-  const [data, setData] = useState(JSON.parse(localStorage.getItem("user") || "{}") as User);
-  // const [data, setData] = useState<User | null>(null);
-  // const { logout } = useAuth();
+  const [data, setData] = useState<User | null>(null);
 
-  // const getUserDetails = async () => {
-  //   try {
-  //     const res = await axios.get("/api/users/me");
-  //     console.log(res.data);
-  //     setData(res.data.data);
-  //   } catch (error: any) {
-  //     console.error("Error getting user details", error.message);
-  //     toast.error("Error getting user details");
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getUserDetails();
-  // }, []);
+  useEffect(() => {
+    // Check if localStorage is available (client-side)
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        setData(JSON.parse(storedUser));
+      }
+    }
+  }, []);
 
   return (
     <>
@@ -44,11 +31,7 @@ export default function ProfilePage() {
             <img
               src={data.avatar}
               alt="avatar"
-              // width={150}
-              // height={150}
-              className="rounded-full w-44 h-44
-              
-              "
+              className="rounded-full w-44 h-44"
             />
             <h1 className="text-2xl font-bold mt-5">{data.name}</h1>
             <p className="text-gray-500">{data.username}</p>
@@ -56,12 +39,6 @@ export default function ProfilePage() {
             <p className="text-gray-500">{data.bio}</p>
             <Link href="/profile/edit"className="text-blue-500">Edit profile
             </Link>
-            {/* <button
-              onClick={logout}
-              className="bg-red-500 text-white px-3 py-1 rounded-md mt-3"
-            >
-              Logout
-            </button> */}
           </div>
         </div>
       ) : "No data"}
