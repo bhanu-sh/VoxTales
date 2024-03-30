@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "@/contexts/authContext";
 import axios from "axios";
 import Link from "next/link";
 import React, { use, useEffect, useState } from "react";
@@ -9,13 +10,15 @@ export default function VerifyEmailPage() {
   const [verified, setVerified] = useState(false);
   const [error, setError] = useState(false);
 
+  const { userType } = useAuth();
+
   useEffect(() => {
     const urlToken = window.location.href.split("=")[1];
     setToken(urlToken || "");
     }, []);
 
   useEffect(() => {
-    const verifyUserEmail = async () => {
+    const verifyArtistEmail = async () => {
       try {
         await axios.post("/api/users/verifyemail", { token });
         setVerified(true);
@@ -25,7 +28,7 @@ export default function VerifyEmailPage() {
       }
     };
     if(token.length > 0) {
-        verifyUserEmail();
+        verifyArtistEmail();
     }
   }, [token]);
 

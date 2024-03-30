@@ -50,6 +50,8 @@ const artistSchema = new mongoose.Schema({
     },
     verifyToken: String,
     verifyTokenExpiry: Date,
+    forgotPasswordToken: String,
+    forgotPasswordExpiry: Date,
     createdAt: {
         type: Date,
         default: Date.now,

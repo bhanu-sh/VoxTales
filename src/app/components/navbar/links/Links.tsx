@@ -54,9 +54,9 @@ const Links = () => {
           <>
             <NavLink item={{ title: "Login", path: "/login" }} />
             <NavLink item={{ title: "Signup", path: "/signup" }} />
-            <button className={styles.logout} onClick={logout}>
+            {/* <button className={styles.logout} onClick={logout}>
               Force Logout
-            </button>
+            </button> */}
           </>
         )}
       </div>
