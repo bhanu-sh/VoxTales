@@ -44,9 +44,6 @@ export async function POST(request: NextRequest) {
         response.cookies.set('token', token, {
             httpOnly: true,
         })
-        response.cookies.set('isAdmin', 'true', {
-            httpOnly: true,
-        })
         
         return response;
     }
