@@ -1,5 +1,5 @@
 .links{
-    display: flex;
+    display: block;
     align-items: center;
     gap: 10px;
 }
@@ -28,27 +28,40 @@
         display: none;
     }
 
+    
+
     .menuButton {
         display: block;
         cursor: pointer;
-        position: fixed;
+        position: absolute;
         top: 20px;
         right: 20px;
-        z-index: 100;
+        z-index: 300;
         animation-name: fadeIn;
         animation-duration: 4s;
     }
 
+    .mobileNav {
+        position: fixed;
+        width:100%;
+        height: 100%;
+        right: 0;
+        backdrop-filter: blur(10px);
+        z-index: 200;
+    }
+
     .mobileLinks {
         position: fixed;
-        top: 80px;
+        /* top: 80px; */
         right: 0;
-        width: 50%;
-        height: calc(100vh - 100px);
-        background-color: rgba(44, 44, 44, 0.61);
+        width: 80%;
+        height: 100vh;
+        background-color: rgba(36, 36, 36, 0.8);
+        backdrop-filter: blur(10px);
         display: flex;
         flex-direction: column;
         align-items: center;
+        z-index: 2000 !important;
         justify-content: center;
         gap: 10px;
     }

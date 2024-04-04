@@ -5,7 +5,7 @@ import styles from "./navbar.module.css";
 const Navbar = () => {
   return (
     <>
-      <nav className="flex justify-between m-3">
+      <nav className={"flex justify-between m-3"}>
         <h1 className="logo text-4xl">
           Vox<span className={styles.logo2}>Tales</span>
         </h1>

@@ -26,7 +26,7 @@ const links = [
   {
     title: "Artists",
     path: "/artists",
-  }
+  },
 ];
 
 const Links = () => {
@@ -60,16 +60,7 @@ const Links = () => {
           </>
         )}
       </div>
-      {open ? (
-        <Image
-          src="/icons/navClose.svg"
-          width={40}
-          height={40}
-          alt="menu button"
-          className={styles.menuButton}
-          onClick={() => setOpen((prev) => !prev)}
-        />
-      ) : (
+      {open ? null : (
         <Image
           src="/icons/navOpen.png"
           width={40}
@@ -81,10 +72,41 @@ const Links = () => {
       )}
       {/* <Image src="/icons/mobileNav.png" width={40} height={40} className={styles.menuButton} onClick={() => setOpen((prev) => !prev)}></Image> */}
       {open && (
-        <div className={styles.mobileLinks}>
-          {links.map((link) => (
-            <NavLink item={link} key={link.title} />
-          ))}
+        <div className={styles.mobileNav}>
+          <div className={styles.mobileLinks}>
+            <Image
+              src="/icons/navClose.svg"
+              width={40}
+              height={40}
+              alt="menu button"
+              className={styles.menuButton}
+              onClick={() => setOpen((prev) => !prev)}
+            />
+            {links.map((link) => (
+              <NavLink item={link} key={link.title} />
+            ))}
+            {loggedin ? (
+              <>
+                <Link href="/profile">
+                  <button>Profile</button>
+                </Link>
+                {isAdmin && (
+                  <NavLink item={{ title: "Admin", path: "/admin" }} />
+                )}
+                <button className={styles.logout} onClick={logout}>
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <NavLink item={{ title: "Login", path: "/login" }} />
+                <NavLink item={{ title: "Signup", path: "/signup" }} />
+                {/* <button className={styles.logout} onClick={logout}>
+              Force Logout
+            </button> */}
+              </>
+            )}
+          </div>
         </div>
       )}
     </div>
