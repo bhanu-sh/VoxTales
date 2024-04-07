@@ -9,19 +9,20 @@ import Link from "next/link";
 const Navbar = () => {
   const pathname = usePathname();
   const { loggedin, logout, userType } = useAuth();
-  const navigation = [
-    { name: "Home", href: "/", current: pathname === "/" ? true : false},
-    { name: "Podcasts", href: "/podcasts", current: pathname === "/podcasts" ? true : false },
-    { name: "Genres", href: "/podcasts/genres", current: pathname === "/podcasts/genres" ? true : false },
-    { name: "Artists", href: "/artists", current: pathname === "/artists" ? true : false },
-    userType === "admin" && { name: "Admin", href: "/admin", current: pathname === "/admin" },
-    loggedin && { name: "Profile", href: "/profile", current: pathname === "/profile" ? true : false },
-  ].filter(Boolean);
+  const navigation: { name: string; href: string; current?: boolean }[] = [
+    { name: "Home", href: "/", current: pathname === "/" },
+    { name: "Podcasts", href: "/podcasts", current: pathname === "/podcasts" },
+    { name: "Genres", href: "/podcasts/genres", current: pathname === "/podcasts/genres" },
+    { name: "Artists", href: "/artists", current: pathname === "/artists" },
+    ...(userType === "admin" ? [{ name: "Admin", href: "/admin", current: pathname === "/admin" }] : []),
+    ...(loggedin ? [{ name: "Profile", href: "/profile", current: pathname === "/profile" }] : []),
+  ];
+  
     // loggedin && { name: "Profile", href: "/profile", current: pathname === "/profile" ? true : false },
 
-  function classNames(...classes: any) {
-    return classes.filter(Boolean).join(" ");
-  }
+    function classNames(...classes: string[]) {
+      return classes.filter(Boolean).join(" ");
+    }
 
   return (
     <Disclosure as="nav" className="bg-black">
@@ -56,7 +57,7 @@ const Navbar = () => {
                     {navigation.map((item) => (
                       <Link
                         key={item.name}
-                        href={item.href}
+                        href={{ pathname: item.href }}
                         className={classNames(
                           item.current
                             ? "bg-gray-900 text-white"
