@@ -1,4 +1,4 @@
-import styles from "./GenreCards.module.css";
+import styles from "./genrecards.module.css";
 
 const GenreCards = () => {
   return (
