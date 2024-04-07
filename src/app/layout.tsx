@@ -25,8 +25,8 @@ export default function RootLayout({
         <div className="flex flex-col min-h-screen">
           <Toaster position="bottom-center" />
           <AuthProvider>
-            <div className="flex-grow px-12">
             <Navbar />
+            <div className="flex-grow px-12">
             <EdgeStoreProvider >{children}</EdgeStoreProvider>
             </div>
           </AuthProvider>
