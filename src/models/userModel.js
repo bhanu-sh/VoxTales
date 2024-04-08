@@ -28,13 +28,13 @@ const userSchema = new mongoose.Schema({
         type: [String],
         default: [],
     },
-    userType: {
+    followers: {
+        type: [String],
+        default: [],
+    },
+    role: {
         type: String,
         default: 'user',
-    },
-    isAdmin: {
-        type: Boolean,
-        default: false,
     },
     isVerified: {
         type: Boolean,

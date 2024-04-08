@@ -1,6 +1,6 @@
 import {connect} from "@/dbConfig/dbConfig";
 import Podcast from "@/models/podcastModel";
-import Artist from "@/models/artistModel";
+import User from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
 
 connect()
@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
         const reqBody = await request.json()
         const {artistId, title, description, audioUrl, imageUrl, duration, genre} = reqBody
 
-        const artist = await Artist.findById(artistId)
+        const artist = await User.findById(artistId)
         if (!artist) {
             return NextResponse.json({error: "Artist not found"}, {status: 404})
         }

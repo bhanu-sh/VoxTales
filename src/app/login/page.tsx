@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -8,17 +8,13 @@ import { useAuth } from "@/contexts/authContext";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [user, setUser] = React.useState({
+  const [user, setUser] = useState({
     email: "",
     password: "",
   });
-  const [buttonDisabled, setButtonDisabled] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { setLoggedin } = useAuth();
-  const [userType, setUserType] = React.useState("User");
-
-  const userActiveStyle = "border-b-4 border-blue-400";
-  const artistActiveStyle = "border-b-4 border-red-600";
 
   const userLogin = async () => {
     try {
@@ -27,24 +23,6 @@ export default function LoginPage() {
       console.log(response.data);
       toast.success("Login successful!");
       const userData = await axios.get("/api/users/me");
-      localStorage.setItem("user", JSON.stringify(userData.data.data));
-      setLoggedin(true);
-      router.push("/profile");
-    } catch (error: any) {
-      console.error("Error logging in", error.response.data.error);
-      toast.error(error.response.data.error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const artistLogin = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.post("/api/artists/login", user);
-      console.log(response.data);
-      toast.success("Login successful!");
-      const userData = await axios.get("/api/artists/me");
       localStorage.setItem("user", JSON.stringify(userData.data.data));
       setLoggedin(true);
       router.push("/profile");
@@ -66,29 +44,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-col w-96 mx-auto justify-center min-h-screen">
-      <h1 className="text-4xl text-center font-bold">Login</h1>
-      <div className="flex">
-        <button
-          className={
-            "mx-auto w-48 px-4" +
-            " " +
-            (userType === "User" ? userActiveStyle : "")
-          }
-          onClick={() => setUserType("User")}
-        >
-          User
-        </button>
-        <button
-          className={
-            "mx-auto w-48 px-4" +
-            " " +
-            (userType === "Artist" ? artistActiveStyle : "")
-          }
-          onClick={() => setUserType("Artist")}
-        >
-          Artist
-        </button>
-      </div>
+      <h1 className="text-4xl text-center font-bold mb-2">Login</h1>
       <hr />
       <label htmlFor="email">Email</label>
       <input
@@ -110,26 +66,18 @@ export default function LoginPage() {
       />
       <button
         className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 disabled:opacity-50"
-        onClick={
-          userType === "User"
-            ? userLogin
-            : userType === "Artist"
-            ? artistLogin
-            : () => {}
-        }
+        onClick={userLogin}
         disabled={buttonDisabled || loading}
       >
         Login
       </button>
-      <p>
-        <Link href="/forgot" className="text-blue-400">
-          Forgot password
-        </Link>
-      </p>
+      <Link href="/forgot">
+        <p className="text-red-600">Forgot password</p>
+      </Link>
       <p>
         Don&apos;t have an account? &nbsp;
-        <Link href="/signup" className="text-blue-400">
-          Signup
+        <Link href="/signup">
+          <span className="text-blue-400">Signup</span>
         </Link>
       </p>
     </div>

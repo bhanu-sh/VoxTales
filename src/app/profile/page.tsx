@@ -23,7 +23,7 @@ export default function ProfilePage() {
   const [artistData, setArtistData] = useState<User[]>([]);
   const [followingCount, setFollowingCount] = useState(0);
 
-  const { userType, loggedin } = useAuth();
+  const { role, loggedin } = useAuth();
 
   const getUserDetails = async () => {
     try {
@@ -99,10 +99,10 @@ export default function ProfilePage() {
   useEffect(() => {
     //check for user type and fetch data accordingly and fetch userdata for admin type as well
     if (loggedin) {
-      if (userType === "user" || userType === "admin") {
+      if (role === "user" || role === "admin") {
         getUserDetails();
         getArtists();
-      } else if (userType === "artist") {
+      } else if (role === "artist") {
         getArtistDetails();
       }
     }
@@ -159,7 +159,7 @@ export default function ProfilePage() {
             </div>
           </div>
           <div className="mt-12">
-            {userType !== "artist" ? (
+            {role !== "artist" ? (
               <>
                 <h1 className="text-4xl flex">
                   Following:

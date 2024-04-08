@@ -1,5 +1,4 @@
 import { connect } from "@/dbConfig/dbConfig";
-import Artist from "@/models/artistModel";
 import User from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -11,7 +10,7 @@ export async function POST(request: NextRequest) {
     const { artistId, userId } = reqBody;
 
     // Check if user already follows artist
-    const artist = await Artist.findById(artistId);
+    const artist = await User.findById(artistId);
     const user = await User.findById(userId);
 
     if (!artist || !user) {

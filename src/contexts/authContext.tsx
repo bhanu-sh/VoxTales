@@ -8,20 +8,16 @@ import { useRouter } from "next/navigation";
 const AuthContext = createContext<{
   loggedin: boolean;
   fetchUserData: () => void;
-  fetchArtistData: () => void;
   avatar: string;
   setLoggedin: (value: boolean) => void;
-  isAdmin: boolean;
-  userType: "user" | "artist" | "admin";
+  role: "user" | "artist" | "admin";
   logout: () => void;
 }>({
   fetchUserData: () => {},
-  fetchArtistData: () => {},
   loggedin: false,
   avatar: "",
   setLoggedin: () => {},
-  userType: "user",
-  isAdmin: false,
+  role: "user",
   logout: () => {},
 });
 
@@ -33,20 +29,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loggedin, setLoggedin] = useState(false);
   const [avatar, setAvatar] = useState("");
   const router = useRouter();
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [userType, setUserType] = useState("user" as "user" | "artist" | "admin");
-
-  const fetchArtistData = async () => {
-    try {
-      const res = await axios.get("/api/artists/me");
-      console.log(res.data);
-      localStorage.setItem("user", JSON.stringify(res.data.data));
-      setLoggedin(true);
-    } catch (error: any) {
-      console.error("Error getting user details");
-      localStorage.removeItem("user");
-    }
-  };
+  const [role, setRole] = useState("user" as "user" | "artist" | "admin");
 
   const fetchUserData = async () => {
     try {
@@ -64,18 +47,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     if (typeof window !== "undefined") {
       const userDataString = localStorage.getItem("user") || "{}";
       const user = JSON.parse(userDataString);
-      if (user && user !== null && user.userType === "artist") {
-        setUserType("artist");
+      if (user && user !== null && user.role === "artist") {
+        setRole("artist");
         setLoggedin(true);
-        fetchArtistData();
-      } else if (user && user !== null && user.userType === "user") {
-        setUserType("user");
+      } else if (user && user !== null && user.role === "user") {
+        setRole("user");
         setLoggedin(true);
         fetchUserData();
-      } else if (user && user !== null && user.userType === "admin") {
-        setUserType("admin");
+      } else if (user && user !== null && user.role === "admin") {
+        setRole("admin");
         setLoggedin(true);
-        setIsAdmin(true);
         fetchUserData();
       } else {
         setLoggedin(false);
@@ -99,12 +80,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     <AuthContext.Provider
       value={{
         fetchUserData,
-        fetchArtistData,
         avatar,
         loggedin,
         setLoggedin,
-        userType,
-        isAdmin,
+        role,
         logout,
       }}
     >

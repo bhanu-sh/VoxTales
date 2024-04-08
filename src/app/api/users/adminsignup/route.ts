@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
             email,
             name,
             password: hashedPassword,
-            userType: 'admin'
+            role: 'admin'
         })
 
         // Save user

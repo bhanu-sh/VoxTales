@@ -10,7 +10,7 @@ export default function VerifyEmailPage() {
   const [verified, setVerified] = useState(false);
   const [error, setError] = useState(false);
 
-  const { userType } = useAuth();
+  const { role } = useAuth();
 
   useEffect(() => {
     const urlToken = window.location.href.split("=")[1];
