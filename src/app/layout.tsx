@@ -26,7 +26,7 @@ export default function RootLayout({
           <Toaster position="bottom-center" />
           <AuthProvider>
             <Navbar />
-            <div className="flex-grow px-4">
+            <div className="flex-grow px-4 container mx-auto">
             <EdgeStoreProvider >{children}</EdgeStoreProvider>
             </div>
           </AuthProvider>

@@ -19,12 +19,10 @@ export default function Page() {
 
   const [user, setUser] = useState<User | null>(null);
   const [file, setFile] = useState<File>();
-  const [image, setImage] = useState<File>();
   const [progress, setProgress] = useState<number>(0);
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const [fileUploaded, setFileUploaded] = useState(false);
-  const [imageUploaded, setImageUploaded] = useState(false);
 
   const [podcast, setPodcast] = useState({
     title: "",
@@ -35,10 +33,6 @@ export default function Page() {
     genre: "",
     publisher: "",
   });
-  const [urls, setUrls] = useState<{
-    url: string;
-    thumbnailUrl: string | null;
-  }>();
 
   const getArtist = async () => {
     try {
@@ -65,7 +59,7 @@ export default function Page() {
       });
       const data = await response.json();
       console.log("Podcast added successfully", data);
-      await edgestore.myPublicImages.confirmUpload({
+      await edgestore.myPublicFiles.confirmUpload({
         url: podcast.image,
       });
     } catch (error: any) {
@@ -138,56 +132,6 @@ export default function Page() {
                   });
                   setPodcast({ ...podcast, audio: res.url });
                   setFileUploaded(true);
-                }
-              }}
-            >
-              Upload
-            </button>
-          </>
-        ) : (
-          "Uploaded"
-        )}
-      </div>
-      <label htmlFor="image">Image</label>
-      <div className="flex flex-col text-center items-center m-6 gap-2">
-        <SingleImageDropzone
-          width={150}
-          height={150}
-          value={file}
-          dropzoneOptions={{
-            maxSize: 1024 * 1024 * 1,
-          }}
-          onChange={async (newImage) => {
-            setImage(newImage);
-            setImageUploaded(false);
-          }}
-        />
-        {!imageUploaded ? (
-          <>
-            <div className="h-[6px] w-44 border rounded overflow-hidden">
-              <div
-                className="h-full bg-white transition-all duration-300 ease-in-out"
-                style={{
-                  width: `${progress}%`,
-                }}
-              />
-            </div>
-            <button
-              className="bg-white text-black rounded px-4 hover:opacity-80"
-              onClick={async () => {
-                if (file) {
-                  const res = await edgestore.myPublicImages.upload({
-                    file,
-                    options: {
-                      temporary: true,
-                    },
-                    onProgressChange: (progress) => {
-                      setProgress(progress);
-                    },
-                  });
-                  // save data
-                  setPodcast({ ...podcast, image: res.url });
-                  setImageUploaded(true);
                 }
               }}
             >
