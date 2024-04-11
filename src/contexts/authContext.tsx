@@ -9,6 +9,7 @@ const AuthContext = createContext<{
   loggedin: boolean;
   fetchUserData: () => void;
   avatar: string;
+  setAvatar: (value: string) => void;
   setLoggedin: (value: boolean) => void;
   role: "user" | "artist" | "admin";
   logout: () => void;
@@ -17,6 +18,7 @@ const AuthContext = createContext<{
   loggedin: false,
   avatar: "",
   setLoggedin: () => {},
+  setAvatar: () => {},
   role: "user",
   logout: () => {},
 });
@@ -47,20 +49,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     if (typeof window !== "undefined") {
       const userDataString = localStorage.getItem("user") || "{}";
       const user = JSON.parse(userDataString);
-      if (user && user !== null && user.role === "artist") {
-        setRole("artist");
-        setLoggedin(true);
-      } else if (user && user !== null && user.role === "user") {
-        setRole("user");
-        setLoggedin(true);
+      if (user && user !== null && user.role) {
+        if (user.role === "artist") {
+          setRole("artist");
+        } else if (user.role === "user") {
+          setRole("user");
+        } else if (user.role === "admin") {
+          setRole("admin");
+        }
         fetchUserData();
-      } else if (user && user !== null && user.role === "admin") {
-        setRole("admin");
-        setLoggedin(true);
-        fetchUserData();
-      } else {
-        setLoggedin(false);
+          setAvatar(user.avatar);
       }
+    } else {
+      setLoggedin(false);
     }
   }, [loggedin] || []);
 
@@ -81,6 +82,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         fetchUserData,
         avatar,
+        setAvatar,
         loggedin,
         setLoggedin,
         role,

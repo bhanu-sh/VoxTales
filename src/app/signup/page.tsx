@@ -111,8 +111,14 @@ export default function SignupPage() {
       </button>
       <p>
         Already have an account? &nbsp;
-        <Link href="/login" className="text-blue-400">
-          Login
+        <Link href="/login">
+          <span className="text-blue-400">Login</span>
+        </Link>
+      </p>
+      <p>
+        Artist Signup? &nbsp;
+        <Link href="/signup/artist">
+          <span className="text-blue-400">Signup</span>
         </Link>
       </p>
     </div>

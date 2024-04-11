@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { Link } from "lucide-react";
 import { useEdgeStore } from "@/lib/edgestore";
 import { SingleImageDropzone } from "@/lib/components/SingleImageDropzone";
 
@@ -15,6 +14,7 @@ const ArtistSignup = () => {
     name: "",
     email: "",
     password: "",
+    artistCode: "",
   });
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -161,6 +161,15 @@ const ArtistSignup = () => {
           </>
         ) : null}
       </span>
+      <label htmlFor="artistCode">Artist Code</label>
+      <input
+        className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 text-black"
+        id="artistCode"
+        type="text"
+        value={artist.artistCode}
+        placeholder="Artist Code"
+        onChange={(e) => setArtist({ ...artist, artistCode: e.target.value })}
+      />
       <button
         className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 disabled:opacity-50"
         disabled={buttonDisabled || loading}

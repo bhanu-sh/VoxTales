@@ -30,7 +30,7 @@ export default function ArtistsPage() {
   const getArtists = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("/api/artists/getall");
+      const res = await axios.get("/api/users/getallartists");
       console.log(res.data);
       setArtistData(res.data.data);
     } catch (error: any) {

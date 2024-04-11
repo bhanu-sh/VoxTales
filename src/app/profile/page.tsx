@@ -2,7 +2,7 @@
 import { useAuth } from "@/contexts/authContext";
 import axios from "axios";
 import Link from "next/link";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 interface User {
@@ -39,23 +39,10 @@ export default function ProfilePage() {
     }
   };
 
-  const getArtistDetails = async () => {
-    try {
-      const res = await axios.get("/api/artists/me");
-      console.log(res.data);
-      setData(res.data.data);
-      setUserId(res.data.data._id);
-    } catch (error: any) {
-      console.error("Error getting Artist details", error.message);
-      toast.error("Error getting Artist details");
-    } finally {
-    }
-  };
-
   const getArtists = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("/api/artists/getall");
+      const res = await axios.get("/api/users/getallartists");
       console.log(res.data);
       setArtistData(res.data.data);
     } catch (error: any) {
@@ -100,15 +87,12 @@ export default function ProfilePage() {
     //check for user type and fetch data accordingly and fetch userdata for admin type as well
     if (loggedin) {
       if (role === "user" || role === "admin") {
-        getUserDetails();
         getArtists();
-      } else if (role === "artist") {
-        getArtistDetails();
       }
+      getUserDetails();
     }
-  }
-  , [loggedin]);
-    
+  }, [loggedin]);
+
   const displayArtists = () => {
     return artistData.map((artist: any) => {
       if (artist.followers.includes(userId))
@@ -167,6 +151,7 @@ export default function ProfilePage() {
                     {" " + followingCount}
                   </span>
                 </h1>
+
                 <h1 className="text-4xl mt-5">Followed artists:</h1>
                 <div className="mt-5">{displayArtists()}</div>
               </>
@@ -177,7 +162,7 @@ export default function ProfilePage() {
                 </h1>
                 <div className="mt-5">
                   <h1 className="text-4xl">Your podcasts:</h1>
-                  {data.podcasts && data.podcasts.length == 0 ? (
+                  {data.podcasts ? (
                     <div className="mt-5">
                       <p className="text-gray-500">
                         You have not added any podcasts yet.
@@ -203,7 +188,9 @@ export default function ProfilePage() {
                             />
                             <div className="ml-5">
                               <h1 className="text-2xl">{podcast.title}</h1>
-                              <p className="text-gray-500">{podcast.description}</p>
+                              <p className="text-gray-500">
+                                {podcast.description}
+                              </p>
                             </div>
                           </div>
                           <button className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg shadow-md hover:bg-gray-300">

@@ -2,7 +2,7 @@ import GenreCards from "./components/GenreCards/GenreCards";
 
 export default function Home() {
   return (
-    <div>
+    <div className="container">
       <h1 className="logo1">
         Vox<span className="logo2">Tales</span>
       </h1>
