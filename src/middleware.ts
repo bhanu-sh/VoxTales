@@ -26,5 +26,6 @@ export const config = {
         "/verifyemail",
         "/admin",
         "/signup/admin",
+        "/podcasts/create",
     ]
 };

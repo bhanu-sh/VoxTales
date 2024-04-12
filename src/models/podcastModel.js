@@ -19,7 +19,7 @@ const podcastSchema = new mongoose.Schema({
     },
     duration: {
         type: String,
-        required: [true, 'Duration is required'],
+        default: '00:00:00',
     },
     published: {
         type: Boolean,
