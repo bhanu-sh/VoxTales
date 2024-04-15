@@ -44,7 +44,7 @@ export default function ArtistsPage() {
   const onFollow = async (artistId: string, userId: string) => {
     try {
       setLoading(true);
-      const res = await axios.post("/api/follow/edit", {
+      const res = await axios.post("/api/users/follow", {
         artistId,
         userId
       });
