@@ -43,7 +43,8 @@ export default function Page() {
     audio: "",
     // duration: "",
     genre: "",
-    publisher: "",
+    publisherId: "",
+    publisherName: "",
   });
 
   //handle podcast form
@@ -53,7 +54,8 @@ export default function Page() {
       //set userID as publisher from local storage
       const user = JSON.parse(localStorage.getItem("user") || "{}");
       toast.success(user._id);
-      await setPodcast({ ...podcast, publisher: user._id });
+      await setPodcast({ ...podcast, publisherId: user._id });
+      await setPodcast({ ...podcast, publisherName: user.name });
       const response = await axios.post("/api/podcasts/addPodcast", podcast);
       console.log("Podcast Uploaded", response.data);
       toast.success("Podcast Uploaded");

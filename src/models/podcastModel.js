@@ -38,8 +38,7 @@ const podcastSchema = new mongoose.Schema({
         default: Date.now,
     },
     publisherId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'users',
+        type: String,
         required: [true, 'Publisher ID is required'],
     },
     publisherName: {

@@ -22,6 +22,7 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(false);
   const [artistData, setArtistData] = useState<User[]>([]);
   const [followingCount, setFollowingCount] = useState(0);
+  const [podcasts, setPodcasts] = useState<any[]>([]);
 
   const { role, loggedin } = useAuth();
 
@@ -48,6 +49,20 @@ export default function ProfilePage() {
     } catch (error: any) {
       console.error("Error getting artists", error.message);
       toast.error("Error getting artists");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getPodcasts = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get("/api/podcasts/getall");
+      console.log(res.data);
+      setPodcasts(res.data.data);
+    } catch (error: any) {
+      console.error("Error getting podcasts", error.message);
+      toast.error("Error getting podcasts");
     } finally {
       setLoading(false);
     }
@@ -90,6 +105,7 @@ export default function ProfilePage() {
         getArtists();
       }
       getUserDetails();
+      getPodcasts();
     }
   }, [loggedin]);
 
@@ -114,6 +130,34 @@ export default function ProfilePage() {
               onClick={() => data && onFollow(artist._id, userId)}
             >
               Unfollow
+            </button>
+          </div>
+        );
+    });
+  };
+
+  const displayPodcasts = () => {
+    //match the publisherId with the userId and display the podcasts
+    return podcasts.map((podcast: any) => {
+      if (podcast.publisherId === userId)
+        return (
+          <div
+            key={podcast._id}
+            className="flex flex-row justify-between items-center my-5"
+          >
+            <div className="flex flex-row items-center">
+              <img
+                src={podcast.thumbnail}
+                alt="thumbnail"
+                className="w-16 h-16"
+              />
+              <div className="ml-5">
+                <h1 className="text-2xl">{podcast.title}</h1>
+                <p className="text-gray-500">{podcast.description}</p>
+              </div>
+            </div>
+            <button className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg shadow-md hover:bg-gray-300">
+              <Link href={`/podcasts/${podcast._id}`}>View</Link>
             </button>
           </div>
         );
@@ -161,8 +205,58 @@ export default function ProfilePage() {
                   Followers: {data.followers.length}
                 </h1>
                 <div className="mt-5">
-                  <h1 className="text-4xl">Your podcasts:</h1>
-                  {data.podcasts ? (
+                  <h1 className="text-4xl">
+                    Your podcasts: {data.podcasts.length}
+                  </h1>
+                  {data.podcasts.length > 0 ? (
+                    <div className="mt-5">
+                      {podcasts.map((podcast: any) => (
+                        <>
+                          <div
+                            key={podcast._id}
+                            className="flex flex-col my-5 w-full lg:w-1/2"
+                          >
+                            {podcast.publisherId === userId && (
+                              <>
+                                <div className="flex flex-row items-center">
+                                  <img
+                                    src={podcast.image}
+                                    alt="thumbnail"
+                                    className="w-16 h-16"
+                                  />
+                                  <div className="ml-5">
+                                    <h1 className="text-2xl">
+                                      {podcast.title}
+                                    </h1>
+                                    <p className="text-gray-500">
+                                      {podcast.description}
+                                    </p>
+                                  </div>
+                                </div>
+                                <div>
+                                  <button className="bg-gray-200 text-gray-800 mr-5 px-4 py-2 rounded-lg shadow-md hover:bg-gray-300">
+                                    <Link href={`/podcasts/${podcast._id}`}>
+                                      View
+                                    </Link>
+                                  </button>
+                                  <button className="bg-orange-600 text-white mr-5 px-4 py-2 rounded-lg shadow-md hover:bg-gray-300">
+                                    <Link
+                                      href={`/podcasts/edit/${podcast._id}`}
+                                    >
+                                      Edit
+                                    </Link>
+                                  </button>
+                                  <button className="bg-red-600 text-white mr-5 px-4 py-2 rounded-lg shadow-md hover:bg-gray-300">
+                                    Delete
+                                  </button>
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        </>
+                      ))}
+                    </div>
+                  ) : (
                     <div className="mt-5">
                       <p className="text-gray-500">
                         You have not added any podcasts yet.
@@ -172,32 +266,6 @@ export default function ProfilePage() {
                           Add podcast
                         </Link>
                       </button>
-                    </div>
-                  ) : (
-                    <div className="mt-5">
-                      {data.podcasts.map((podcast: any) => (
-                        <div
-                          key={podcast._id}
-                          className="flex flex-row justify-between items-center my-5"
-                        >
-                          <div className="flex flex-row items-center">
-                            <img
-                              src={podcast.thumbnail}
-                              alt="thumbnail"
-                              className="w-16 h-16"
-                            />
-                            <div className="ml-5">
-                              <h1 className="text-2xl">{podcast.title}</h1>
-                              <p className="text-gray-500">
-                                {podcast.description}
-                              </p>
-                            </div>
-                          </div>
-                          <button className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg shadow-md hover:bg-gray-300">
-                            <Link href={`/podcasts/${podcast._id}`}>View</Link>
-                          </button>
-                        </div>
-                      ))}
                     </div>
                   )}
                 </div>

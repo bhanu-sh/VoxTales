@@ -8,18 +8,19 @@ connect();
 export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
-    const { publisher, title, description, audio, genre } = reqBody;
+    const { publisherId, publisherName, title, description, audio, genre } = reqBody;
 
-    console.log("Publisher ID:", publisher);
-    const artist = await User.findById(publisher);
+    console.log("Publisher ID:", publisherId);
+    const artist = await User.findById(publisherId);
     console.log("Artist:", artist);
     if (!artist) {
       return NextResponse.json({ error: "Artist not found" }, { status: 404 });
     }
 
     const newPodcast = new Podcast({
-      publisher,
+      publisherId,
       title,
+      publisherName,
       description,
       audio,
       genre,
