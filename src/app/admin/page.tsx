@@ -117,7 +117,7 @@ export default function AdminPage() {
             <Link
               aria-describedby="tier-company"
               className="flex items-center justify-center w-full px-6 py-2.5 text-center text-white duration-200 bg-black border-2 border-black rounded-full nline-flex hover:bg-transparent hover:border-black hover:text-black focus:outline-none focus-visible:outline-black text-sm focus-visible:ring-black"
-              href="#"
+              href="/admin/manage-artists"
             >
               Manage Artists
             </Link>
@@ -145,7 +145,7 @@ export default function AdminPage() {
             <Link
               aria-describedby="tier-company"
               className="flex items-center justify-center w-full px-6 py-2.5 text-center text-white duration-200 bg-black border-2 border-black rounded-full nline-flex hover:bg-transparent hover:border-black hover:text-black focus:outline-none focus-visible:outline-black text-sm focus-visible:ring-black"
-              href="#"
+              href="/admin/manage-admins"
             >
               Manage Admins
             </Link>

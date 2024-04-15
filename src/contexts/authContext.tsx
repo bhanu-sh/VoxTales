@@ -63,7 +63,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } else {
       setLoggedin(false);
     }
-  }, [loggedin] || []);
+  }, [loggedin]);
 
   const logout = async () => {
     try {

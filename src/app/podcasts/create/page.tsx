@@ -53,9 +53,10 @@ export default function Page() {
       setLoading(true);
       //set userID as publisher from local storage
       const user = JSON.parse(localStorage.getItem("user") || "{}");
-      toast.success(user._id);
-      await setPodcast({ ...podcast, publisherId: user._id });
-      await setPodcast({ ...podcast, publisherName: user.name });
+      const userId = user._id
+      const userName = user.name
+      setPodcast({ ...podcast, publisherId: userId, publisherName: userName });
+      toast("updated: " + podcast.publisherId)
       const response = await axios.post("/api/podcasts/addPodcast", podcast);
       console.log("Podcast Uploaded", response.data);
       toast.success("Podcast Uploaded");
@@ -66,8 +67,6 @@ export default function Page() {
     } catch (error: any) {
       console.log("Podcast Upload failed", error.message);
       toast.error(error.response.data.error);
-      const user = JSON.parse(localStorage.getItem("user") || "{}");
-      toast.error(user._id)
     } finally {
       setLoading(false);
     }

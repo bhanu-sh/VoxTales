@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import styles from "./musicplayer.module.css";
+//@ts-ignore
 import useSound from "use-sound"; // for handling the sound
 import { AiFillPlayCircle, AiFillPauseCircle } from "react-icons/ai"; // icons for play and pause
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi"; // icons for next and previous track
@@ -9,6 +10,10 @@ interface Props {
   podcast: {
     audio: string;
   };
+}
+
+interface currTime {
+  
 }
 
 //add passed prop audio file
