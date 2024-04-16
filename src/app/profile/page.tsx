@@ -14,6 +14,8 @@ interface User {
   bio: string;
   followers: any;
   podcasts: any;
+  _id: string;
+  isVerified: boolean;
 }
 
 export default function ProfilePage() {
@@ -49,6 +51,22 @@ export default function ProfilePage() {
     } catch (error: any) {
       console.error("Error getting artists", error.message);
       toast.error("Error getting artists");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const sendVerificationMail = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.post("/api/users/sendverifymail", {
+        email: data?.email,
+      });
+      console.log(res.data);
+      toast.success("Email sent successfully. Check your inbox!");
+    } catch (error: any) {
+      console.error("Error sending verification email", error.message);
+      toast.error("Error sending verification email");
     } finally {
       setLoading(false);
     }
@@ -115,7 +133,8 @@ export default function ProfilePage() {
         return (
           <div
             key={artist._id}
-            className="flex flex-row justify-between items-center my-5">
+            className="flex flex-row justify-between items-center my-5"
+          >
             <div className="flex flex-row items-center">
               <img
                 src={artist.avatar}
@@ -132,34 +151,6 @@ export default function ProfilePage() {
               onClick={() => data && onFollow(artist._id, userId)}
             >
               Unfollow
-            </button>
-          </div>
-        );
-    });
-  };
-
-  const displayPodcasts = () => {
-    //match the publisherId with the userId and display the podcasts
-    return podcasts.map((podcast: any) => {
-      if (podcast.publisherId === userId)
-        return (
-          <div
-            key={podcast._id}
-            className="flex flex-row justify-between items-center my-5"
-          >
-            <div className="flex flex-row items-center">
-              <img
-                src={podcast.thumbnail}
-                alt="thumbnail"
-                className="w-16 h-16"
-              />
-              <div className="ml-5">
-                <h1 className="text-2xl">{podcast.title}</h1>
-                <p className="text-gray-500">{podcast.description}</p>
-              </div>
-            </div>
-            <button className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg shadow-md hover:bg-gray-300">
-              <Link href={`/podcasts/${podcast._id}`}>View</Link>
             </button>
           </div>
         );
@@ -186,6 +177,14 @@ export default function ProfilePage() {
                   Edit profile
                 </Link>
               </button>
+              {data.isVerified === false && (
+                <button
+                  onClick={sendVerificationMail}
+                  className="bg-orange-500 text-white px-4 mt-5 py-2 rounded-lg shadow-md hover:bg-red-700 w-32"
+                >
+                  Verify email
+                </button>
+              )}
             </div>
           </div>
           <div className="mt-12">
