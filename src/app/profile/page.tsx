@@ -107,13 +107,15 @@ export default function ProfilePage() {
       getUserDetails();
       getPodcasts();
     }
-  }, [loggedin]);
+  }, [loggedin] || [role]);
 
   const displayArtists = () => {
     return artistData.map((artist: any) => {
       if (artist.followers.includes(userId))
         return (
-          <div className="flex flex-row justify-between items-center my-5">
+          <div
+            key={artist._id}
+            className="flex flex-row justify-between items-center my-5">
             <div className="flex flex-row items-center">
               <img
                 src={artist.avatar}
