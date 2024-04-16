@@ -9,11 +9,10 @@ import { IconContext } from "react-icons";
 interface Props {
   podcast: {
     audio: string;
+    title: string;
+    description: string;
+    image: string;
   };
-}
-
-interface currTime {
-  
 }
 
 //add passed prop audio file
@@ -45,18 +44,36 @@ const MusicPlayer = (props: Props) => {
   };
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (sound) {
-        setSeconds(sound.seek([])); // setting the seconds state with the current state
-        const min = Math.floor(sound.seek([]) / 60);
-        const sec = Math.floor(sound.seek([]) % 60);
-        setCurrTime({
-          min,
-          sec,
-        });
-      }
-    }, 1000);
-    return () => clearInterval(interval);
+    //use interface for typescript
+    sound.onplay = () => {
+      setIsPlaying(true);
+    };
+    sound.onpause = () => {
+      setIsPlaying(false);
+    };
+    sound.ontimeupdate = () => {
+      const sec = sound.seek();
+      const min = Math.floor(sec / 60);
+      const secRemain = Math.floor(sec % 60);
+      setCurrTime({
+        //@ts-ignore
+        min: min,
+        //@ts-ignore
+        sec: secRemain,
+      });
+      setSeconds(sec);
+    };
+
+    sound.onended = () => {
+      setIsPlaying(false);
+    };
+
+    return () => {
+      sound.onplay = null;
+      sound.onpause = null;
+      sound.ontimeupdate = null;
+      sound.onended = null;
+    };
   }, [sound]);
 
   return (
@@ -81,7 +98,6 @@ const MusicPlayer = (props: Props) => {
             type="range"
             min="0"
             max={duration / 1000}
-            default="0"
             value={seconds}
             className="timeline"
             onChange={(e) => {
