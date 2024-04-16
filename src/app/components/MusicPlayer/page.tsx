@@ -1,3 +1,5 @@
+"use client"
+
 import { useEffect, useState } from "react";
 import styles from "./musicplayer.module.css";
 //@ts-ignore
