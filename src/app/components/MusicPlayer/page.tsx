@@ -8,13 +8,15 @@ import { AiFillPlayCircle, AiFillPauseCircle } from "react-icons/ai"; // icons f
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi"; // icons for next and previous track
 import { IconContext } from "react-icons";
 
+interface Podcast {
+  audio: string;
+  title: string;
+  description: string;
+  image: string;
+}
+
 interface Props {
-  podcast: {
-    audio: string;
-    title: string;
-    description: string;
-    image: string;
-  };
+  podcast: Podcast;
 }
 
 //add passed prop audio file
