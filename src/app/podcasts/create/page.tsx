@@ -166,7 +166,8 @@ export default function Page() {
               <option value="History">History</option>
               <option value="Science">Science</option>
               <option value="Technology">Technology</option>
-              <option value="Other">Other</option>
+              <option value="Horror">Horror</option>
+              <option value="Crime">Crime</option>
             </select>
             <button
               className="bg-red-600 text-white rounded-lg p-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-red-300"
