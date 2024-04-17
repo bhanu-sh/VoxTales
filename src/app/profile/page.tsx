@@ -117,7 +117,6 @@ export default function ProfilePage() {
   };
 
   useEffect(() => {
-    //check for user type and fetch data accordingly and fetch userdata for admin type as well
     if (loggedin) {
       if (role === "user" || role === "admin") {
         getArtists();

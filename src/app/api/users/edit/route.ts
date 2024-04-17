@@ -38,15 +38,7 @@ export async function POST(request: NextRequest) {
       user.gender = gender;
     }
 
-    if (oldPassword && newPassword) {
-      const isMatch = await bcrypt.compare(oldPassword, user.password);
-
-      if (!isMatch) {
-        return NextResponse.json(
-          { error: "Invalid old password" },
-          { status: 400 }
-        );
-      }
+    if (newPassword) {
 
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(newPassword, salt);

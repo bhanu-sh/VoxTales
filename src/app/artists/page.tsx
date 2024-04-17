@@ -134,7 +134,7 @@ export default function ArtistsPage() {
 
   return (
     <div className="p-2">
-      <h1>Artists</h1>
+      <h1 className="text-4xl font-bold text-center">Artists</h1>
       <div className="max-w-4xl flex h-auto flex-wrap mx-auto lg:my-0 justify-between mt-5 text-center">
         {displayArtists()}
       </div>

@@ -27,7 +27,6 @@ export default function EditProfile() {
     dob: "",
     email: "",
     gender: "",
-    oldPassword: "",
     newPassword: "",
   });
   const [data, setData] = useState<User | null>(null);
@@ -71,7 +70,6 @@ export default function EditProfile() {
         dob: res.data.data.dob,
         gender: res.data.data.gender,
         email: res.data.data.email,
-        oldPassword: "",
         newPassword: "",
       });
     } catch (error: any) {
@@ -412,7 +410,7 @@ export default function EditProfile() {
                         </label>
                         {passwordField ? (
                           <>
-                            <input
+                            {/* <input
                               type="text"
                               id="old_password"
                               className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
@@ -420,9 +418,9 @@ export default function EditProfile() {
                               onChange={(e) =>
                                 setUser({ ...user, oldPassword: e.target.value })
                               }
-                            />
+                            /> */}
                             <input
-                              type="text"
+                              type="password"
                               id="new_password"
                               className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
                               placeholder="New password"
@@ -432,7 +430,7 @@ export default function EditProfile() {
                             />
                             // Confirm password field to match new password
                             <input
-                              type="text"
+                              type="password"
                               id="confirm_password"
                               className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
                               placeholder="Confirm password"

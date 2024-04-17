@@ -11,7 +11,7 @@ const podcastSchema = new mongoose.Schema({
     },
     image: {
         type: String,
-        default: 'https://files.edgestore.dev/utpzbr9jgl4utdct/myPublicImages/_public/5b7405bd-b4e8-41bf-af0a-4ec47b5cb542.png',
+        default: 'https://files.edgestore.dev/utpzbr9jgl4utdct/myPublicImages/_public/1cd7702d-f45b-40c2-babe-8a257dff282c.png',
     },
     audio: {
         type: String,
