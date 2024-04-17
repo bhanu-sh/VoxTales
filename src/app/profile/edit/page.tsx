@@ -40,11 +40,12 @@ export default function EditProfile() {
   const [dobField, setDobField] = useState(false);
   const [emailField, setEmailField] = useState(false);
   const [passwordField, setPasswordField] = useState(false);
-  const [confirmPasswordFlag, setConfirmPasswordFlag] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [open, setOpen] = React.useState(false);
   const [file, setFile] = useState<File>();
   const [uploaded, setUploaded] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
+  const [disabled, setDisabled] = useState<boolean>(false);
   const [urls, setUrls] = useState<{
     url: string;
     thumbnailUrl: string | null;
@@ -102,7 +103,16 @@ export default function EditProfile() {
 
   useEffect(() => {
     getUserDetails();
-  }, []);
+  } , []);
+
+  useEffect(() => {
+    if(confirmPassword !== user.newPassword) {
+      setDisabled(true);
+    }
+    else {
+      setDisabled(false);
+    }
+  }, [confirmPassword, user.newPassword]);
 
   return (
     <>
@@ -190,11 +200,7 @@ export default function EditProfile() {
                             alt="Bordered avatar"
                           />
                           <div className="flex flex-col  space-y-5 sm:ml-8 items-center text-center">
-                            <button
-                              onClick={handleOpen}
-                            >
-                              Change Image
-                            </button>
+                            <button onClick={handleOpen}>Change Image</button>
                           </div>
                         </>
                       ) : (
@@ -404,57 +410,48 @@ export default function EditProfile() {
                             {passwordField ? "Cancel" : "Change password"}
                           </button>
                         </label>
-                        <p>{user.oldPassword}</p>
                         {passwordField ? (
                           <>
                             <input
-                              type="password"
+                              type="text"
                               id="old_password"
                               className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
                               placeholder="Old password"
                               onChange={(e) =>
-                                setUser({
-                                  ...user,
-                                  oldPassword: e.target.value,
-                                })
+                                setUser({ ...user, oldPassword: e.target.value })
                               }
                             />
                             <input
-                              type="password"
+                              type="text"
                               id="new_password"
                               className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
                               placeholder="New password"
                               onChange={(e) =>
-                                setUser({
-                                  ...user,
-                                  newPassword: e.target.value,
-                                })
+                                setUser({ ...user, newPassword: e.target.value })
                               }
                             />
+                            // Confirm password field to match new password
                             <input
-                              type="password"
+                              type="text"
                               id="confirm_password"
                               className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
                               placeholder="Confirm password"
-                              onChange={(e) => {
-                                if (e.target.value === user.newPassword) {
-                                  setConfirmPasswordFlag(false);
-                                } else {
-                                  setConfirmPasswordFlag(true);
-                                }
-                              }}
+                              onChange={(e) =>
+                                setConfirmPassword(e.target.value)
+                              }
                             />
+                            <div className="flex justify-end">
+                              <button
+                                onClick={onEdit}
+                                type="submit"
+                                disabled={disabled}
+                                className="text-white bg-indigo-700  hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                              >
+                                Save
+                              </button>
+                            </div>
                           </>
                         ) : null}
-                      </div>
-                      <div className="flex justify-end">
-                        <button
-                          onClick={onEdit}
-                          type="submit"
-                          className="text-white bg-indigo-700  hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
-                        >
-                          Save
-                        </button>
                       </div>
                     </main>
                   </div>
