@@ -2,18 +2,18 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-    const path = request.nextUrl.pathname
+    const path = request.nextUrl.pathname;
+    
+    const isPublicPath = path === '/login' || path === '/' || path === '/signup' || path === '/signup/admin';
+    
+    const token = request.cookies.get('token')?.value || '';
 
-    const isPublicPath = path === '/login' || path === '/' || path === '/signup' || path === '/verifyemail' || path === '/signup/admin' 
-
-    const token = request.cookies.get('token')?.value || ''
-
-    if(isPublicPath && token) {
-        return NextResponse.redirect(new URL('/', request.nextUrl))
+    if (isPublicPath && token) {
+        return NextResponse.redirect(new URL('/', request.nextUrl));
     }
-
-    if(!isPublicPath && !token) {
-        return NextResponse.redirect(new URL('/login', request.nextUrl))
+    
+    if (!isPublicPath && !token) {
+        return NextResponse.redirect(new URL('/login', request.nextUrl));
     }
 }
 
@@ -21,10 +21,13 @@ export function middleware(request: NextRequest) {
 export const config = {
     matcher: [
         "/profile", 
-        "/login", 
+        "/login",
         "/signup",
         "/verifyemail",
         "/admin",
+        "/admin/manage-users",
+        "/admin/manage-artists",
+        "/admin/manage-admins",
         "/signup/admin",
         "/podcasts/create",
     ]

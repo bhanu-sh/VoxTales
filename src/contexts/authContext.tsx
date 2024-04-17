@@ -58,7 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           setRole("admin");
         }
         fetchUserData();
-          setAvatar(user.avatar);
+        setAvatar(user.avatar);
       }
     } else {
       setLoggedin(false);
