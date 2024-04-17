@@ -428,7 +428,6 @@ export default function EditProfile() {
                                 setUser({ ...user, newPassword: e.target.value })
                               }
                             />
-                            // Confirm password field to match new password
                             <input
                               type="password"
                               id="confirm_password"
