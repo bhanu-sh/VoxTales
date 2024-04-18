@@ -10,9 +10,11 @@ interface User {
   avatar: string;
   name: string;
   bio: string;
+  _id: string;
+  followers: string[];
 }
 
-export default function ArtistsPage() {
+const FewArtistsCards = () => {
   const router = useRouter();
   const [artistData, setArtistData] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
@@ -46,87 +48,29 @@ export default function ArtistsPage() {
       setLoading(true);
       const res = await axios.post("/api/users/follow", {
         artistId,
-        userId
+        userId,
       });
       console.log("Followed artist", res.data);
       toast.success(res.data.message);
-  
+
       // Update artistData with the updated followers data
       const updatedArtistData = artistData.map((artist: any) => {
         if (artist._id === artistId) {
           // Update followers array with the new userId
           return {
             ...artist,
-            followers: res.data.followers // Assuming the API response includes updated followers data
+            followers: res.data.followers, // Assuming the API response includes updated followers data
           };
         }
         return artist;
       });
-  
       setArtistData(updatedArtistData);
     } catch (error: any) {
       console.error("Error following artist", error.message);
-      toast.error("Error");
+      toast.error("Error following artist");
     } finally {
       setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    // Check if localStorage is available (client-side)
-    if (typeof window !== "undefined") {
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-        setUserId(JSON.parse(storedUser)._id);
-      }
-    }
-  }, []);
-
-  const displayArtists = () => {
-    return artistData.map((artist: any) => {
-      return (
-        <div key={artist._id}>
-          <img
-            src={artist.avatar}
-            alt="avatar"
-            className="rounded-lg w-44 h-44"
-          />
-          <h1 className="text-2xl font-bold mt-2">{artist.name}</h1>
-          <p className="text-gray-500">{artist.bio}</p>
-          {artist.followers && (
-            <p>{artist.followers.length} followers</p>
-          )}
-          {artist.podcasts && (
-            <p>{artist.podcasts.length} podcasts</p>
-          )}
-          <p>
-            {artist.followers && artist.followers.includes(userId) ? (
-              <button
-                className={followingStyle}
-                onClick={() => user && onFollow(artist._id, userId)}
-              >
-                Unfollow
-              </button>
-            ) : (
-              <button
-                className={followStyle}
-                onClick={() => {
-                  if(loggedin) {
-                    onFollow(artist._id, userId)
-                  } else {
-                    router.push("/login");
-                  }
-                }}
-              >
-                Follow
-              </button>
-            )}
-          </p>
-          <Link href={`/artists/${artist._id}`}>View artist</Link>
-        </div>
-      );
-    });
   };
 
   useEffect(() => {
@@ -134,11 +78,37 @@ export default function ArtistsPage() {
   }, []);
 
   return (
-    <div className="p-2">
-      <h1 className="text-4xl font-bold text-center">Artists</h1>
-      <div className="max-w-4xl flex h-auto flex-wrap mx-auto lg:my-0 justify-between mt-5 text-center">
-        {displayArtists()}
-      </div>
+    <div className="flex flex-wrap justify-center">
+      {loading && <p>Loading...</p>}
+      {artistData.slice(0, 5).map((artist) => (
+        <div key={artist._id} className="m-2 p-2 bg-gray-100 rounded-lg">
+          <img
+            src={artist.avatar}
+            alt={artist.name}
+            className="w-24 h-24 rounded-full"
+          />
+          <h3 className="text-lg font-bold text-black">{artist.name}</h3>
+          <p>{artist.bio}</p>
+          <Link href={`/artists/${artist._id}`}>
+            <p className="text-blue-500">View Profile</p>
+          </Link>
+          {loggedin && (
+            <button
+              onClick={() => onFollow(artist._id, userId)}
+              className={
+                artist.followers.includes(userId) ? followingStyle : followStyle
+              }
+            >
+              {artist.followers.includes(userId) ? "Following" : "Follow"}
+            </button>
+          )}
+        </div>
+      ))}
+      <button className="bg-pink-600 text-white px-4 my-2 rounded-lg shadow-md hover:bg-pink-700">
+        <Link href="/artists">View All</Link>
+      </button>
     </div>
   );
-}
+};
+
+export default FewArtistsCards;

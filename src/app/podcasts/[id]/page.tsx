@@ -1,10 +1,8 @@
 "use client";
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Player from "@/app/components/Player/Player";
-import Song from "@/app/components/Podcast/Podcast";
 import "./styles/app.scss";
 import axios from "axios";
-import toast from "react-hot-toast";
 import PodcastComponent from "@/app/components/Podcast/Podcast";
 
 interface Podcast {
