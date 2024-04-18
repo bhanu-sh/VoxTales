@@ -7,7 +7,6 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import PodcastComponent from "@/app/components/Podcast/Podcast";
 
-
 interface Podcast {
   title: string;
   artist: string;
@@ -25,13 +24,17 @@ export default function PodcastPlayer({ params }: { params: Params }) {
   const [podcast, setPodcast] = useState<Podcast | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const [songInfo, setSongInfo] = useState({
     currentTime: 0,
     duration: 0,
     animationPercentage: 0,
   });
 
-  const timeUpdateHandler = (e: React.SyntheticEvent<HTMLAudioElement, Event>) => {
+  const timeUpdateHandler = (
+    e: React.SyntheticEvent<HTMLAudioElement, Event>
+  ) => {
     const current = (e.target as HTMLAudioElement).currentTime;
     const duration = (e.target as HTMLAudioElement).duration;
     const roundedCurrent = Math.round(current);
@@ -46,28 +49,36 @@ export default function PodcastPlayer({ params }: { params: Params }) {
   };
 
   useEffect(() => {
-      const fetchPodcast = async () => {
-        try {
-          // setLoading(true);
-          const { data } = await axios.get(`/api/podcasts/${params.id}`);
-          setPodcast(data.podcast);
-          toast.success("Podcast fetched successfully");
-          console.log("Podcast fetched successfully", data.podcast);
-        } catch (error: any) {
-          // setError(true);
-          toast.error(error.response.data.error);
-          console.error("Error fetching podcast", error.response.data.error);
-        }
-      };
-      fetchPodcast();
-    }, [params.id]);
+    const fetchPodcast = async () => {
+      try {
+        setLoading(true);
+        const { data } = await axios.get(`/api/podcasts/${params.id}`);
+        setPodcast(data.podcast);
+        console.log("Podcast fetched successfully", data.podcast);
+      } catch (error: any) {
+        setError(true);
+        console.error("Error fetching podcast", error.response.data.error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPodcast();
+  }, [params.id]);
 
   return (
     <div>
+      {loading && (
+        <div className="flex justify-center items-center h-96">
+          <div className="loader" />
+        </div>
+      )}
+      {error && (
+        <div className="flex justify-center items-center h-96">
+          <p className="text-red-500 text-2xl">This Podcast does not exist</p>
+        </div>
+      )}
       {podcast && (
         <>
-          
-
           <PodcastComponent podcast={podcast} />
           <Player
             audioRef={audioRef}
@@ -87,4 +98,3 @@ export default function PodcastPlayer({ params }: { params: Params }) {
     </div>
   );
 }
-
