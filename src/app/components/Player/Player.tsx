@@ -17,12 +17,14 @@ const Player = ({
   setIsPlaying,
   songInfo,
   setSongInfo,
+  publisherId,
 }: {
   audioRef: any;
   isPlaying: boolean;
   setIsPlaying: (isPlaying: boolean) => void;
   songInfo: SongInfo;
   setSongInfo: (songInfo: SongInfo) => void;
+  publisherId: string;
 }) => {
   const dragHandler = (e: { target: { value: any } }) => {
     audioRef.current.currentTime = e.target.value;
@@ -86,7 +88,7 @@ const Player = ({
             icon={faPause}
           />
         )}
-        <Link href="/podcasts">
+        <Link href={`/artists/${publisherId}`}>
           <button className="bg-white text-black rounded-full px-4 py-2 hover:bg-red-600 hover:text-white">
             Profile
           </button>

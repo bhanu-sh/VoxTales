@@ -12,6 +12,7 @@ interface Podcast {
   id: number;
   image: string;
   publisherName: string;
+  publisherId: string;
 }
 
 interface Params {
@@ -84,6 +85,7 @@ export default function PodcastPlayer({ params }: { params: Params }) {
             setIsPlaying={setIsPlaying}
             songInfo={songInfo}
             setSongInfo={setSongInfo}
+            publisherId={podcast.publisherId}
           />
           <audio
             onLoadedMetadata={timeUpdateHandler}
