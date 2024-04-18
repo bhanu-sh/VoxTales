@@ -80,33 +80,39 @@ const FewArtistsCards = () => {
   return (
     <div className="flex flex-wrap justify-center">
       {loading && <p>Loading...</p>}
-      {artistData.slice(0, 5).map((artist) => (
-        <div key={artist._id} className="m-2 p-2 bg-gray-100 rounded-lg">
-          <img
-            src={artist.avatar}
-            alt={artist.name}
-            className="w-24 h-24 rounded-full"
-          />
-          <h3 className="text-lg font-bold text-black">{artist.name}</h3>
-          <p>{artist.bio}</p>
-          <Link href={`/artists/${artist._id}`}>
-            <p className="text-blue-500">View Profile</p>
-          </Link>
-          {loggedin && (
-            <button
-              onClick={() => onFollow(artist._id, userId)}
-              className={
-                artist.followers.includes(userId) ? followingStyle : followStyle
-              }
-            >
-              {artist.followers.includes(userId) ? "Following" : "Follow"}
-            </button>
-          )}
-        </div>
-      ))}
-      <button className="bg-pink-600 text-white px-4 my-2 rounded-lg shadow-md hover:bg-pink-700">
-        <Link href="/artists">View All</Link>
-      </button>
+      {artistData && !loading && (
+        <>
+          {artistData.slice(0, 5).map((artist) => (
+            <div key={artist._id} className="m-2 p-2 bg-gray-100 rounded-lg">
+              <img
+                src={artist.avatar}
+                alt={artist.name}
+                className="w-24 h-24 rounded-full"
+              />
+              <h3 className="text-lg font-bold text-black">{artist.name}</h3>
+              <p>{artist.bio}</p>
+              <Link href={`/artists/${artist._id}`}>
+                <p className="text-blue-500">View Profile</p>
+              </Link>
+              {loggedin && (
+                <button
+                  onClick={() => onFollow(artist._id, userId)}
+                  className={
+                    artist.followers.includes(userId)
+                      ? followingStyle
+                      : followStyle
+                  }
+                >
+                  {artist.followers.includes(userId) ? "Following" : "Follow"}
+                </button>
+              )}
+            </div>
+          ))}
+          <button className="bg-pink-600 text-white px-4 my-2 rounded-lg shadow-md hover:bg-pink-700">
+            <Link href="/artists">View All</Link>
+          </button>
+        </>
+      )}
     </div>
   );
 };
