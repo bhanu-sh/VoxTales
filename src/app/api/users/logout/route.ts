@@ -1,20 +1,16 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(
+  request: NextRequest,
+  response: NextResponse,
+  cookie: string
+) {
   try {
     const response = NextResponse.json({
       message: "Logout successful",
       success: true,
     });
-    // Set the cookies expiration date to the past
-    response.cookies.set("token", "", {
-      httpOnly: true,
-      expires: new Date(0),
-    });
-    response.cookies.set("isAdmin", "", {
-      httpOnly: true,
-      expires: new Date(0),
-    });
+    response.cookies.delete("token");
     return response;
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
