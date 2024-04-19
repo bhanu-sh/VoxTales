@@ -91,3 +91,22 @@ a{
   font-weight: 300;
   margin-top: 10px;
 }
+
+.bgImage{
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-left: -16%;
+  margin-top: -20%;
+  width: 2200px;
+  position: fixed;
+  z-index: -1;
+  opacity: 1;
+  filter: blur(5px);
+}
+
+@media (max-width: 600px) {
+  .bgImage{
+    display: none;
+  }
+}

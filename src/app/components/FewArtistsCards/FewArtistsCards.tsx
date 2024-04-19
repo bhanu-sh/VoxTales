@@ -3,8 +3,11 @@ import axios from "axios";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/authContext";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 interface User {
   avatar: string;
@@ -15,6 +18,42 @@ interface User {
 }
 
 const FewArtistsCards = () => {
+  var settings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 4,
+    initialSlide: 0,
+    arrows: false,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          infinite: true,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          initialSlide: 2,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
+  };
+
   const router = useRouter();
   const [artistData, setArtistData] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
@@ -23,7 +62,6 @@ const FewArtistsCards = () => {
 
   const { loggedin } = useAuth();
 
-  //styles for follow button
   const followingStyle =
     "bg-gray-200 text-gray-800 px-4 py-2 rounded-lg shadow-md hover:bg-gray-300";
   const followStyle =
@@ -53,13 +91,11 @@ const FewArtistsCards = () => {
       console.log("Followed artist", res.data);
       toast.success(res.data.message);
 
-      // Update artistData with the updated followers data
       const updatedArtistData = artistData.map((artist: any) => {
         if (artist._id === artistId) {
-          // Update followers array with the new userId
           return {
             ...artist,
-            followers: res.data.followers, // Assuming the API response includes updated followers data
+            followers: res.data.followers,
           };
         }
         return artist;
@@ -78,41 +114,48 @@ const FewArtistsCards = () => {
   }, []);
 
   return (
-    <div className="flex flex-wrap justify-center">
-      {loading && <p>Loading...</p>}
+    <div className="slider-container mb-5">
       {artistData && !loading && (
-        <>
+        <Slider {...settings}>
           {artistData.slice(0, 5).map((artist) => (
-            <div key={artist._id} className="m-2 p-2 bg-gray-100 rounded-lg">
-              <img
-                src={artist.avatar}
-                alt={artist.name}
-                className="w-24 h-24 rounded-full"
-              />
-              <h3 className="text-lg font-bold text-black">{artist.name}</h3>
-              <p>{artist.bio}</p>
-              <Link href={`/artists/${artist._id}`}>
-                <p className="text-blue-500">View Profile</p>
-              </Link>
-              {loggedin && (
-                <button
-                  onClick={() => onFollow(artist._id, userId)}
-                  className={
-                    artist.followers.includes(userId)
-                      ? followingStyle
-                      : followStyle
-                  }
-                >
-                  {artist.followers.includes(userId) ? "Following" : "Follow"}
-                </button>
-              )}
+            <div key={artist._id} className="px-5">
+              <div className="bg-gray-100 rounded">
+                <img
+                  src={artist.avatar}
+                  alt={artist.name}
+                  className="w-24 h-24 rounded-full mx-auto"
+                />
+                <h3 className="text-lg font-bold text-black text-center">
+                  {artist.name}
+                </h3>
+                <Link href={`/artists/${artist._id}`}>
+                  <p className="text-blue-500 text-center">View Profile</p>
+                </Link>
+                {loggedin && (
+                  <button
+                    onClick={() => onFollow(artist._id, userId)}
+                    className={
+                      artist.followers.includes(userId)
+                        ? followingStyle
+                        : followStyle
+                    }
+                  >
+                    {artist.followers.includes(userId) ? "Following" : "Follow"}
+                  </button>
+                )}
+              </div>
             </div>
           ))}
-          <button className="bg-pink-600 text-white px-4 my-2 rounded-lg shadow-md hover:bg-pink-700">
-            <Link href="/artists">View All</Link>
-          </button>
-        </>
+          <div className="pt-16">
+            <h3 className="bg-white w-48 text-lg font-bold text-black text-center mx-auto">
+              <Link href="/artists">View All Artists</Link>
+            </h3>
+          </div>
+        </Slider>
       )}
+      <div className="flex flex-wrap justify-center">
+        {loading && <p>Loading...</p>}
+      </div>
     </div>
   );
 };
