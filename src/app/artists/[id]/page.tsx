@@ -1,7 +1,7 @@
 "use client";
 import { useAuth } from "@/contexts/authContext";
 import axios from "axios";
-import { Link } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -40,7 +40,6 @@ export default function ArtistProfile({ params }: any) {
       });
       console.log(res.data);
       setArtistData(res.data.data);
-      toast.success(res.data.message);
     } catch (error: any) {
       console.error("Error getting user details", error.message);
       toast.error(error.data.message);
@@ -57,22 +56,8 @@ export default function ArtistProfile({ params }: any) {
       setPodcasts(res.data.data);
     } catch (error: any) {
       console.error("Error getting podcasts", error.message);
-      toast.error("Error getting podcasts");
     } finally {
       setLoading(false);
-    }
-  };
-
-  const getUserDetails = async () => {
-    try {
-      const res = await axios.get("/api/users/me");
-      console.log(res.data);
-      setUser(res.data.data);
-      setUserId(res.data.data._id);
-    } catch (error: any) {
-      console.error("Error getting user details", error.message);
-      toast.error("Error getting user details");
-    } finally {
     }
   };
 
@@ -85,13 +70,11 @@ export default function ArtistProfile({ params }: any) {
       });
       console.log("Followed artist", res.data);
       toast.success(res.data.message);
-      // Update artistData with the updated followers data
       const updatedArtistData = artistData;
       if (updatedArtistData) {
         updatedArtistData.followers = res.data.followers;
       }
       setArtistData(updatedArtistData);
-
     } catch (error: any) {
       console.error("Error following artist", error.message);
       toast.error("Error");
@@ -109,7 +92,6 @@ export default function ArtistProfile({ params }: any) {
       }
     }
     getArtistDetails();
-    // getUserDetails();
     getPodcasts();
   }, [] || [onFollow]);
   return (
@@ -128,26 +110,34 @@ export default function ArtistProfile({ params }: any) {
               </h1>
               <p className="text-gray-500 pt-2 pb-4">{artistData.bio}</p>
               <p>
-                {artistData.followers &&
-                artistData.followers.includes(userId) ? (
-                  <button
-                    className={followingStyle}
-                    onClick={() => user && onFollow(artistData._id, userId)}
-                  >
-                    Unfollow
-                  </button>
+                {params.id !== userId ? (
+                  <>
+                    {artistData.followers &&
+                    artistData.followers.includes(userId) ? (
+                      <button
+                        className={followingStyle}
+                        onClick={() => user && onFollow(artistData._id, userId)}
+                      >
+                        Unfollow
+                      </button>
+                    ) : (
+                      <button
+                        className={followStyle}
+                        onClick={() => {
+                          if (loggedin) {
+                            onFollow(artistData._id, userId);
+                          } else {
+                            router.push("/login");
+                          }
+                        }}
+                      >
+                        Follow
+                      </button>
+                    )}
+                  </>
                 ) : (
-                  <button
-                    className={followStyle}
-                    onClick={() => {
-                      if (loggedin) {
-                        onFollow(artistData._id, userId);
-                      } else {
-                        router.push("/login");
-                      }
-                    }}
-                  >
-                    Follow
+                  <button className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg shadow-md hover:bg-gray-300">
+                    <Link href={`/profile`}>Edit Profile</Link>
                   </button>
                 )}
               </p>
@@ -191,14 +181,6 @@ export default function ArtistProfile({ params }: any) {
                                     View
                                   </Link>
                                 </button>
-                                <button className="bg-orange-600 text-white mr-5 px-4 py-2 rounded-lg shadow-md hover:bg-gray-300">
-                                  <Link href={`/podcasts/edit/${podcast._id}`}>
-                                    Edit
-                                  </Link>
-                                </button>
-                                <button className="bg-red-600 text-white mr-5 px-4 py-2 rounded-lg shadow-md hover:bg-gray-300">
-                                  Delete
-                                </button>
                               </div>
                             </>
                           )}
@@ -208,9 +190,7 @@ export default function ArtistProfile({ params }: any) {
                   </div>
                 ) : (
                   <div className="mt-5">
-                    <p className="text-gray-400">
-                      No podcasts yet.
-                    </p>
+                    <p className="text-gray-400">No podcasts yet.</p>
                   </div>
                 )}
               </div>
