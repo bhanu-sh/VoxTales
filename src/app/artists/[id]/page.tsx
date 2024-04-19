@@ -1,3 +1,4 @@
+"use client";
 import { useAuth } from "@/contexts/authContext";
 import axios from "axios";
 import { Link } from "lucide-react";
@@ -18,36 +19,33 @@ interface User {
 export default function ArtistProfile({ params }: any) {
   const router = useRouter();
 
-  const [data, setData] = useState<User | null>(null);
   const [userId, setUserId] = useState("");
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
-  const [artistData, setArtistData] = useState<User[]>([]);
-  const [followingCount, setFollowingCount] = useState(0);
+  const [artistData, setArtistData] = useState<User | null>(null);
   const [podcasts, setPodcasts] = useState<any[]>([]);
 
-  const { loggedin, role } = useAuth();
+  const { loggedin } = useAuth();
 
   const followingStyle =
     "bg-gray-200 text-gray-800 px-4 py-2 rounded-lg shadow-md hover:bg-gray-300";
   const followStyle =
     "bg-pink-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-pink-700";
 
-  const getUserDetails = async () => {
+  const getArtistDetails = async () => {
     try {
-      const res = await axios.get("/api/users/getuserbyid", {
-        params: {
-          id: params.id,
-        },
+      setLoading(true);
+      const res = await axios.post("/api/users/getartistbyid", {
+        id: params.id,
       });
       console.log(res.data);
-      setData(res.data.data);
-      setUserId(res.data.data._id);
-      setFollowingCount(res.data.data.following.length);
+      setArtistData(res.data.data);
+      toast.success(res.data.message);
     } catch (error: any) {
       console.error("Error getting user details", error.message);
-      toast.error("Error getting user details");
+      toast.error(error.data.message);
     } finally {
+      setLoading(false);
     }
   };
 
@@ -65,28 +63,35 @@ export default function ArtistProfile({ params }: any) {
     }
   };
 
+  const getUserDetails = async () => {
+    try {
+      const res = await axios.get("/api/users/me");
+      console.log(res.data);
+      setUser(res.data.data);
+      setUserId(res.data.data._id);
+    } catch (error: any) {
+      console.error("Error getting user details", error.message);
+      toast.error("Error getting user details");
+    } finally {
+    }
+  };
+
   const onFollow = async (artistId: string, userId: string) => {
     try {
       setLoading(true);
-      const res = await axios.post("/api/follow/edit", {
+      const res = await axios.post("/api/users/follow", {
         artistId,
         userId,
       });
       console.log("Followed artist", res.data);
-      setFollowingCount((prev) => prev - 1);
       toast.success(res.data.message);
-
       // Update artistData with the updated followers data
-      const updatedArtistData = artistData.map((artist: any) => {
-        if (artist._id === artistId) {
-          return {
-            ...artist,
-            followers: res.data.followers,
-          };
-        }
-        return artist;
-      });
+      const updatedArtistData = artistData;
+      if (updatedArtistData) {
+        updatedArtistData.followers = res.data.followers;
+      }
       setArtistData(updatedArtistData);
+
     } catch (error: any) {
       console.error("Error following artist", error.message);
       toast.error("Error");
@@ -103,29 +108,31 @@ export default function ArtistProfile({ params }: any) {
         setUserId(JSON.parse(storedUser)._id);
       }
     }
-    getUserDetails();
+    getArtistDetails();
+    // getUserDetails();
     getPodcasts();
-  }, []);
+  }, [] || [onFollow]);
   return (
     <>
-      {data ? (
+      {artistData ? (
         <div className="h-auto lg:my-0 mt-5 container p-5">
           <div className="flex flex-row">
             <img
-              src={data.avatar}
+              src={artistData.avatar}
               alt="avatar"
-              className="rounded-full border-4 border-red-600 w-44 h-44"
+              className="rounded-full border-4 border-green-500 w-44 h-44"
             />
             <div className="flex flex-col justify-center ml-5">
               <h1 className="text-4xl">
-                Hey,
-                <span className="text-red-600">{" " + data.name}</span>
+                <span className="text-green-500">{" " + artistData.name}</span>
               </h1>
-              <button className="bg-red-600 text-white px-4 mt-12 py-2 rounded-lg shadow-md hover:bg-red-700 w-32">
-                {data.followers && data.followers.includes(userId) ? (
+              <p className="text-gray-500 pt-2 pb-4">{artistData.bio}</p>
+              <p>
+                {artistData.followers &&
+                artistData.followers.includes(userId) ? (
                   <button
                     className={followingStyle}
-                    onClick={() => user && onFollow(data._id, userId)}
+                    onClick={() => user && onFollow(artistData._id, userId)}
                   >
                     Unfollow
                   </button>
@@ -134,7 +141,7 @@ export default function ArtistProfile({ params }: any) {
                     className={followStyle}
                     onClick={() => {
                       if (loggedin) {
-                        onFollow(data._id, userId);
+                        onFollow(artistData._id, userId);
                       } else {
                         router.push("/login");
                       }
@@ -143,19 +150,19 @@ export default function ArtistProfile({ params }: any) {
                     Follow
                   </button>
                 )}
-              </button>
+              </p>
             </div>
           </div>
           <div className="mt-12">
             <>
               <h1 className="text-4xl flex">
-                Followers: {data.followers.length}
+                Followers: {artistData.followers.length}
               </h1>
               <div className="mt-5">
                 <h1 className="text-4xl">
-                  Your podcasts: {data.podcasts.length}
+                  Podcasts: {artistData.podcasts.length}
                 </h1>
-                {data.podcasts.length > 0 ? (
+                {artistData.podcasts.length > 0 ? (
                   <div className="mt-5">
                     {podcasts.map((podcast: any) => (
                       <>
@@ -163,7 +170,7 @@ export default function ArtistProfile({ params }: any) {
                           key={podcast._id}
                           className="flex flex-col my-5 w-full lg:w-1/2"
                         >
-                          {podcast.publisherId === userId && (
+                          {podcast.publisherId === params.id && (
                             <>
                               <div className="flex flex-row items-center">
                                 <img
@@ -201,14 +208,9 @@ export default function ArtistProfile({ params }: any) {
                   </div>
                 ) : (
                   <div className="mt-5">
-                    <p className="text-gray-500">
-                      You have not added any podcasts yet.
+                    <p className="text-gray-400">
+                      No podcasts yet.
                     </p>
-                    <button className="bg-red-600 text-white px-4 mt-5 py-2 rounded-lg shadow-md hover:bg-red-700 w-48">
-                      <Link href="/podcasts/create" className="text-blue-500">
-                        Add podcast
-                      </Link>
-                    </button>
                   </div>
                 )}
               </div>

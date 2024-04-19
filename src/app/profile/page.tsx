@@ -26,6 +26,13 @@ export default function ProfilePage() {
   const [followingCount, setFollowingCount] = useState(0);
   const [podcasts, setPodcasts] = useState<any[]>([]);
 
+  const userBorder = "rounded-full border-4 border-white w-44 h-44";
+  const artistBorder = "rounded-full border-4 border-green-500 w-44 h-44";
+  const adminBorder = "rounded-full border-4 border-red-600 w-44 h-44";
+  const userNameColor = "text-white";
+  const artistNameColor = "text-green-500";
+  const adminNameColor = "text-red-600";
+
   const { role, loggedin } = useAuth();
 
   const getUserDetails = async () => {
@@ -164,12 +171,28 @@ export default function ProfilePage() {
             <img
               src={data.avatar}
               alt="avatar"
-              className="rounded-full border-4 border-red-600 w-44 h-44"
+              className={
+                role === "user"
+                  ? userBorder
+                  : role === "artist"
+                  ? artistBorder
+                  : adminBorder
+              }
             />
             <div className="flex flex-col justify-center ml-5">
               <h1 className="text-4xl">
                 Hey,
-                <span className="text-red-600">{" " + data.name}</span>
+                <span
+                  className={
+                    role === "user"
+                      ? userNameColor
+                      : role === "artist"
+                      ? artistNameColor
+                      : adminNameColor
+                  }
+                >
+                  {" " + data.name}
+                </span>
               </h1>
               <button className="bg-red-600 text-white px-4 mt-12 py-2 rounded-lg shadow-md hover:bg-red-700 w-32">
                 <Link href="/profile/edit" className="text-blue-500">
@@ -261,8 +284,8 @@ export default function ProfilePage() {
                       <p className="text-gray-500">
                         You have not added any podcasts yet.
                       </p>
-                      <button className="bg-red-600 text-white px-4 mt-5 py-2 rounded-lg shadow-md hover:bg-red-700 w-48">
-                        <Link href="/podcasts/create" className="text-blue-500">
+                      <button className="bg-green-600 text-white px-4 mt-5 py-2 rounded-lg shadow-md hover:bg-green-700 w-48">
+                        <Link href="/podcasts/create">
                           Add podcast
                         </Link>
                       </button>
