@@ -45,9 +45,16 @@ const podcastSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Publisher Name is required'],
     },
+    likedBy: {
+        type: [String],
+        default: [],
+    },
     likes: {
         type: Number,
         default: 0,
+    }, createdAt: {
+        type: Date,
+        default: Date.now,
     },
 })
 

@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid User" }, { status: 400 });
     }
 
-    const { avatar, name, dob, gender, email, oldPassword, newPassword } =
+    const { avatar, name, dob, gender, email, newPassword } =
       await request.json();
 
     if (name) {

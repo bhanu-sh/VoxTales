@@ -13,6 +13,7 @@ interface Podcast {
   image: string;
   publisherName: string;
   publisherId: string;
+  description: string;
 }
 
 interface Params {
@@ -78,7 +79,7 @@ export default function PodcastPlayer({ params }: { params: Params }) {
       )}
       {podcast && (
         <>
-          <PodcastComponent podcast={podcast} />
+            <PodcastComponent podcast={podcast} />
           <Player
             audioRef={audioRef}
             isPlaying={isPlaying}

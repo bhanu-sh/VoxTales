@@ -169,7 +169,7 @@ export default function ArtistSignupPage() {
       <input
         className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 text-black"
         id="artistCode"
-        type="text"
+        type="password"
         value={artist.artistCode}
         placeholder="Artist Code"
         onChange={(e) => setArtist({ ...artist, artistCode: e.target.value })}

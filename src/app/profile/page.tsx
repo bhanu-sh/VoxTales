@@ -25,6 +25,7 @@ export default function ProfilePage() {
   const [artistData, setArtistData] = useState<User[]>([]);
   const [followingCount, setFollowingCount] = useState(0);
   const [podcasts, setPodcasts] = useState<any[]>([]);
+  const [fullDescription, setFullDescription] = useState(false);
 
   const userBorder = "rounded-full border-4 border-white w-44 h-44";
   const artistBorder = "rounded-full border-4 border-green-500 w-44 h-44";
@@ -252,7 +253,41 @@ export default function ProfilePage() {
                                       {podcast.title}
                                     </h1>
                                     <p className="text-gray-500">
-                                      {podcast.description}
+                                      {podcast.description.length > 50 ? (
+                                        <>
+                                          {fullDescription ? (
+                                            <>
+                                              {podcast.description}{" "}
+                                              <span className="text-blue-500">
+                                                <button
+                                                  onClick={() =>
+                                                    setFullDescription(false)
+                                                  }
+                                                  className="text-blue-500"
+                                                >
+                                                  View less
+                                                </button>
+                                              </span>
+                                            </>
+                                          ) : (
+                                            <>
+                                              {podcast.description.slice(0, 50)}{" "}
+                                              <span className="text-blue-500">
+                                                <button
+                                                  onClick={() =>
+                                                    setFullDescription(true)
+                                                  }
+                                                  className="text-blue-500"
+                                                >
+                                                  ...View more
+                                                </button>
+                                              </span>
+                                            </>
+                                          )}
+                                        </>
+                                      ) : (
+                                        podcast.description
+                                      )}
                                     </p>
                                   </div>
                                 </div>
@@ -285,9 +320,7 @@ export default function ProfilePage() {
                         You have not added any podcasts yet.
                       </p>
                       <button className="bg-green-600 text-white px-4 mt-5 py-2 rounded-lg shadow-md hover:bg-green-700 w-48">
-                        <Link href="/podcasts/create">
-                          Add podcast
-                        </Link>
+                        <Link href="/podcasts/create">Add podcast</Link>
                       </button>
                     </div>
                   )}

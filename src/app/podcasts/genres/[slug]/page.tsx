@@ -1,5 +1,6 @@
 "use client";
 import axios from "axios";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -11,6 +12,8 @@ interface Podcast {
   image: string;
   genre: string;
   audio: string;
+  publisherName: string;
+  publisherId: string;
 }
 
 interface podcastType {
@@ -65,25 +68,41 @@ export default function GenreSlugPage({ params }: any) {
             </div>
           )}
           {error && <h1 className="text-4xl font-bold text-center">Error</h1>}
-          <div className="max-w-4xl flex h-auto flex-wrap mx-auto lg:my-0 justify-between mt-5 text-center">
+          <div className="max-w-4xl flex h-auto flex-wrap mx-auto lg:my-0 justify-between mt-5">
             {podcasts.map((podcast: Podcast) => {
               if (podcast.genre === podcastType[slug]) {
                 return (
                   <div key={podcast._id}>
-                    <img
-                      src={podcast.image}
-                      alt={podcast.title}
-                      className="rounded-lg w-44 h-44"
-                    />
-                    <h3 className="text-lg font-semibold mt-2">
-                      {podcast.title}
-                    </h3>
-                    <button
-                      className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600"
-                      onClick={() => router.push(`/podcasts/${podcast._id}`)}
-                    >
-                      View Podcast
-                    </button>
+                    <div className="flex flex-row my-5">
+                      <img
+                        src={podcast.image}
+                        alt={podcast.title}
+                        className="rounded-lg w-44 h-44 object-cover hover:object-contain transition duration-500 ease-in-out transform hover:scale-110"
+                      />
+                      <div className="ml-5">
+                        <h3 className="text-3xl font-semibold mt-2">
+                          {podcast.title.length > 100
+                            ? podcast.title.slice(0, 100) + "..."
+                            : podcast.title}
+                        </h3>
+                        <Link href={`/artists/${podcast.publisherId}`}>
+                          <p className="text-zinc-400">
+                            {podcast.publisherName}
+                          </p>
+                        </Link>
+                        <p className="text-zinc-400 my-2">
+                          Description:
+                          {podcast.description.length > 50
+                            ? podcast.description.slice(0, 50) + "..."
+                            : podcast.description}
+                        </p>
+                        <Link href={`/podcasts/${podcast._id}`}>
+                          <button className="bg-pink-800 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-500">
+                            Play
+                          </button>
+                        </Link>
+                      </div>
+                    </div>
                   </div>
                 );
               }
