@@ -58,7 +58,7 @@ function ReactCarousel() {
         <div className="px-5">
           <img className="rounded-3xl" src="/icons/fiction.jpeg" alt="" />
           <button className="bg-white p-2 rounded-lg text-black flex mx-auto hover:bg-gray-200 mt-3">
-            <Link href="/category/fiction">
+            <Link href="/podcasts/genres/fiction">
               <h3>Fiction</h3>
             </Link>
           </button>
@@ -66,7 +66,7 @@ function ReactCarousel() {
         <div className="px-5">
           <img className="rounded-3xl" src="/icons/nonFiction.jpeg" alt="" />
           <button className="bg-white p-2 rounded-lg text-black flex mx-auto hover:bg-gray-200 mt-3">
-            <Link href="/category/nonfiction">
+            <Link href="/podcasts/genres/nonfiction">
               <h3>Non-Fiction</h3>
             </Link>
           </button>
@@ -74,7 +74,7 @@ function ReactCarousel() {
         <div className="px-5">
           <img className="rounded-3xl" src="/icons/technology.jpeg" alt="" />
           <button className="bg-white p-2 rounded-lg text-black flex mx-auto hover:bg-gray-200 mt-3">
-            <Link href="/category/technology">
+            <Link href="/podcasts/genres/technology">
               <h3>Technology</h3>
             </Link>
           </button>
@@ -82,7 +82,7 @@ function ReactCarousel() {
         <div className="px-5">
           <img className="rounded-3xl" src="/icons/history.png" alt="" />
           <button className="bg-white p-2 rounded-lg text-black flex mx-auto hover:bg-gray-200 mt-3">
-            <Link href="/category/history">
+            <Link href="/podcasts/genres/history">
               <h3>History</h3>
             </Link>
           </button>
@@ -90,7 +90,7 @@ function ReactCarousel() {
         <div className="px-5">
           <img className="rounded-3xl" src="/icons/horror.png" alt="" />
           <button className="bg-white p-2 rounded-lg text-black flex mx-auto hover:bg-gray-200 mt-3">
-            <Link href="/category/horror">
+            <Link href="/podcasts/genres/horror">
               <h3>Horror</h3>
             </Link>
           </button>
