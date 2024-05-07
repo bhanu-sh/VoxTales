@@ -64,7 +64,7 @@ export default function AboutPage() {
       </p>
       <h1 className="text-3xl mt-5 font-bold">Join Us</h1>
       <p>
-        Whether you're a creator looking to share your stories with the world or
+        Whether you&apos;re a creator looking to share your stories with the world or
         a listener eager to discover captivating tales, VoxTales invites you to
         immerse yourself in a world of endless storytelling possibilities. Join
         our community today and become a part of the VoxTales journey!
