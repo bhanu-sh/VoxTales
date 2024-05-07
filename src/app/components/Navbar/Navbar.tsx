@@ -1,14 +1,16 @@
 "use client";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/authContext";
 import Link from "next/link";
+import VoiceCommands from "../VoiceCommands/VoiceCommands";
 
 const Navbar = () => {
   const pathname = usePathname();
   const { loggedin, logout, role, avatar } = useAuth();
+  const [listening, setListening] = useState(true);
   const navigation: { name: string; href: string; current?: boolean }[] = [
     { name: "Home", href: "/", current: pathname === "/" },
     { name: "Podcasts", href: "/podcasts", current: pathname === "/podcasts" },
@@ -40,6 +42,7 @@ const Navbar = () => {
     <Disclosure as="nav" className="bg-black">
       {({ open }) => (
         <>
+          {listening ? <VoiceCommands /> : null}
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -78,9 +81,16 @@ const Navbar = () => {
                         {item.name}
                       </Link>
                     ))}
+                    <button
+                      onClick={() => setListening(!listening)}
+                      className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-1 py-2 text-sm font-medium"
+                    >
+                      VC
+                    </button>
                   </div>
                 </div>
               </div>
+
               {loggedin ? (
                 <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                   <button
@@ -195,6 +205,12 @@ const Navbar = () => {
                   {item.name}
                 </Disclosure.Button>
               ))}
+              <button
+                onClick={() => setListening(!listening)}
+                className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-1 py-2 text-sm font-medium"
+              >
+                VC
+              </button>
             </div>
           </Disclosure.Panel>
         </>

@@ -9,6 +9,7 @@ export default function Home() {
   return (
     <div>
       <img className="bgImage" src="/background.png" alt="" />
+
       {loggedin ? (
         <h1 className="text-2xl font-bold my-5">Welcome back!</h1>
       ) : (

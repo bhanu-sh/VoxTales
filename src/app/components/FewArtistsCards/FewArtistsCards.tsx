@@ -131,18 +131,22 @@ const FewArtistsCards = () => {
                 <Link href={`/artists/${artist._id}`}>
                   <p className="text-blue-500 text-center">View Profile</p>
                 </Link>
-                {loggedin && (
-                  <button
-                    onClick={() => onFollow(artist._id, userId)}
-                    className={
-                      artist.followers.includes(userId)
-                        ? followingStyle
-                        : followStyle
-                    }
-                  >
-                    {artist.followers.includes(userId) ? "Following" : "Follow"}
-                  </button>
-                )}
+                <div className="text-center">
+                  {loggedin && (
+                    <button
+                      onClick={() => onFollow(artist._id, userId)}
+                      className={
+                        artist.followers.includes(userId)
+                          ? followingStyle
+                          : followStyle
+                      }
+                    >
+                      {artist.followers.includes(userId)
+                        ? "Following"
+                        : "Follow"}
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           ))}
