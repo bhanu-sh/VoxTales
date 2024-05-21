@@ -25,10 +25,56 @@ VoxTales is an innovative storytelling podcast platform designed to connect crea
 ## Screenshots
 
 ### Home Page
-   ![Home Page](/screenshots/home.png)
+
+![Home Page](/screenshots/home.png)
 
 ### Login Page
-   ![Login Page](/screenshots/login.png)
+
+![Login Page](/screenshots/login.png)
+
+### Signup Page
+
+![Signup Page](/screenshots/signup.png)
+
+### Artist Signup
+
+![Artist Signup](/screenshots/artist_signup.png)
+
+### Admin Signup
+
+![Admin Signup](/screenshots/admin_signup.png)
+
+### Profile Page
+
+![Profile Page](/screenshots/profile_page.png)
+
+### Profile Edit
+
+![Profile Edit](/screenshots/profile_edit.png)
+
+### Podcast Page
+
+![Podcast Page](/screenshots/podcast.png)
+
+### Upload Podcast
+
+![Upload Podcast](/screenshots/upload.png)
+
+### Podcast Player
+
+![Podcast Player](/screenshots/player.png)
+
+### Admin Dashboard
+
+![Admin Dashboard](/screenshots/admin.png)
+
+### Manage Users
+
+![Manage Users](/screenshots/manage_users.png)
+
+### Manage Artists
+
+![Manage Artists](/screenshots/manage_artists.png)
 
 ## Installation
 
