@@ -1,18 +1,77 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# VoxTales
 
-## Getting Started
+VoxTales is an innovative storytelling podcast platform designed to connect creators and listeners through captivating narratives. Built with a robust stack including Next.js, React.js, MongoDB, Node.js, and TypeScript, VoxTales offers a seamless user experience with its modern architecture and intuitive interface.
 
-First, run the development server:
+## Table of Contents
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- [Screenshots](#screenshots)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Learn Mode](#learn-more)
+- [Scripts](#scripts)
+- [Deploy on Vercel](#deploy-on-vercel)
+
+## Features
+
+- **Dynamic User Model**: Roles for artists, regular users, and administrators.
+- **Comprehensive Profile Management**: Users can curate their experience.
+- **Community Engagement**: Follow favorite artists and foster community.
+- **Security and Authentication**: Email verification and password recovery.
+- **Podcast Management**: Effortlessly upload and manage podcast content.
+- **Streamlined Navigation**: Powered by Next.js app routing.
+- **Visually Appealing Design**: Crafted with TailwindCSS.
+
+## Screenshots
+
+1. Home Page
+   ![Home Page](/screenshots/home.png)
+
+## Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/bhanu-sh/voxtales.git
+   cd voxtales
+
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+
+   ```
+
+3. Set up environment variables. Create a .env.local file in the root directory and add the following:
+
+   MONGO_URI=MONGO_DB_URI
+   TOKEN_SECRET=anything_you_like
+   DOMAIN=http://localhost:3000
+   MAILTRAP_USER=Get_from_MailTrap
+   MAILTRAP_PASS=Get_from_MailTrap
+   ADMIN_CODE=anything_you_like
+   ARTIST_CODE=anything_you_like
+   EDGE_STORE_ACCESS_KEY=Get_from_Edge_Store
+   EDGE_STORE_SECRET_KEY=Get_from_Edge_Store
+
+## Usage
+
+1.  Run the development server:
+
+    ```bash
+    npm run dev
+
+    ```
+
+2.  Build for production:
+
+    ```bash
+    npm run build
+    npm start
+
+    ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
