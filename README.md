@@ -4,8 +4,8 @@ VoxTales is an innovative storytelling podcast platform designed to connect crea
 
 ## Table of Contents
 
-- [Screenshots](#screenshots)
 - [Features](#features)
+- [Screenshots](#screenshots)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Learn Mode](#learn-more)
@@ -24,8 +24,11 @@ VoxTales is an innovative storytelling podcast platform designed to connect crea
 
 ## Screenshots
 
-1. Home Page
+### Home Page
    ![Home Page](/screenshots/home.png)
+
+### Login Page
+   ![Login Page](/screenshots/login.png)
 
 ## Installation
 
